@@ -1,0 +1,8 @@
+# Indique à Netlify quoi faire à chaque mise à jour.
+# Vous n'avez pas à modifier ce fichier.
+[build]
+  command = "node build.mjs"   # fabrique la liste des fiches
+  publish = "."                 # publie le dossier du site
+
+[build.environment]
+  NODE_VERSION = "20"

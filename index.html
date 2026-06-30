@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M. Turquet — Mathématiques au lycée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papier:#f4eee1; --papier-fonce:#ece3d1; --carte:#fffdf7;
+    --encre:#221d15; --encre-douce:#6a6052;
+    --trait:rgba(34,29,21,.12); --trait-fort:rgba(34,29,21,.22);
+    --seconde:#1f6f5c; --premiere:#b06a12; --terminale:#9c3320;
+    --serif:'Fraunces',Georgia,serif; --sans:'Spline Sans',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--encre);background:var(--papier);line-height:1.6;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 1px 1px, rgba(34,29,21,.035) 1px, transparent 0);background-size:22px 22px;min-height:100vh;}
+
+  /* Barre du haut */
+  .topbar{display:flex;align-items:center;gap:.6rem;padding:1rem 1.5rem;border-bottom:1px solid var(--trait);position:sticky;top:0;background:rgba(244,238,225,.86);backdrop-filter:blur(10px);z-index:30;}
+  .topbar a.brand{font-family:var(--serif);font-weight:600;font-size:1.05rem;color:var(--encre);text-decoration:none;letter-spacing:-.01em;display:flex;align-items:baseline;gap:.5rem;}
+  .topbar .brand small{font-family:var(--sans);font-weight:400;font-size:.78rem;color:var(--encre-douce);}
+
+  main{max-width:1000px;margin:0 auto;padding:2.5rem 1.5rem 5rem}
+  .view{animation:rise .45s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Accueil */
+  .hero{text-align:center;padding:2.5rem 0 2.8rem}
+  .eyebrow{font-size:.76rem;letter-spacing:.28em;text-transform:uppercase;color:var(--encre-douce);margin-bottom:1rem}
+  .hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(2.4rem,6.5vw,4.2rem);line-height:1;letter-spacing:-.02em}
+  .hero .sub{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(1.3rem,3.5vw,1.9rem);color:var(--terminale);margin-top:.3rem}
+  .prompt{margin-top:2.3rem;color:var(--encre-douce);font-size:1rem;letter-spacing:.02em}
+
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:1.4rem}
+  .level-card{position:relative;background:var(--carte);border:1px solid var(--trait);border-top:5px solid var(--c);border-radius:16px;padding:2rem 1.5rem 1.6rem;text-align:left;cursor:pointer;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease;display:flex;flex-direction:column;min-height:170px;}
+  .level-card:hover{transform:translateY(-5px);box-shadow:0 16px 34px -18px rgba(34,29,21,.45)}
+  .level-card .lname{font-family:var(--serif);font-weight:600;font-size:1.85rem;color:var(--c);letter-spacing:-.01em}
+  .level-card .meta{color:var(--encre-douce);font-size:.86rem;margin-top:.3rem}
+  .level-card .go{margin-top:auto;padding-top:1rem;font-size:.9rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
+  .level-card .go svg{width:.95rem;height:.95rem;transition:transform .2s}
+  .level-card:hover .go svg{transform:translateX(4px)}
+
+  /* Lien retour */
+  .back{display:inline-flex;align-items:center;gap:.45rem;background:none;border:none;font-family:var(--sans);font-size:.9rem;color:var(--encre-douce);cursor:pointer;padding:.3rem 0;margin-bottom:1.6rem;text-decoration:none}
+  .back:hover{color:var(--encre)}
+  .back svg{width:.9rem;height:.9rem}
+
+  .level-title{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,5vw,2.8rem);letter-spacing:-.01em;color:var(--c);margin-bottom:.4rem}
+  .level-intro{color:var(--encre-douce);margin-bottom:2rem}
+
+  /* Deux portes */
+  .doors{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem}
+  .door{background:var(--carte);border:1px solid var(--trait);border-radius:16px;padding:1.7rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.55rem;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;min-height:200px}
+  .door:hover{transform:translateY(-5px);box-shadow:0 16px 34px -18px rgba(34,29,21,.45)}
+  .door .ic{width:2.6rem;height:2.6rem;border-radius:11px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);margin-bottom:.3rem}
+  .door .ic svg{width:1.4rem;height:1.4rem}
+  .door h3{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
+  .door p{color:var(--encre-douce);font-size:.93rem;line-height:1.5}
+  .door .cta{margin-top:auto;padding-top:.6rem;font-size:.9rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
+  .door .cta svg{width:.95rem;height:.95rem;transition:transform .2s}
+  .door:hover .cta svg{transform:translate(3px,-3px)}
+  .door.disabled{opacity:.55;cursor:default;pointer-events:none}
+  .door .badge{display:inline-block;align-self:flex-start;font-size:.7rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:var(--papier-fonce);color:var(--encre-douce);padding:.2rem .55rem;border-radius:999px;margin-top:.2rem}
+
+  /* Liste des fiches */
+  .search{position:relative;max-width:420px;margin-bottom:2rem}
+  .search input{width:100%;font-family:var(--sans);font-size:.95rem;padding:.62rem .9rem .62rem 2.4rem;border:1px solid var(--trait-fort);border-radius:999px;background:var(--carte);color:var(--encre)}
+  .search input:focus{outline:none;border-color:var(--encre);box-shadow:0 0 0 3px rgba(34,29,21,.07)}
+  .search svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:1.05rem;height:1.05rem;color:var(--encre-douce)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.05rem}
+  .card{background:var(--carte);border:1px solid var(--trait);border-top:4px solid var(--c);border-radius:14px;padding:1.2rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px -16px rgba(34,29,21,.4)}
+  .tag{align-self:flex-start;font-size:.72rem;font-weight:600;padding:.22rem .6rem;border-radius:999px;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
+  .card h4{font-family:var(--serif);font-weight:600;font-size:1.18rem;line-height:1.2;letter-spacing:-.01em}
+  .card .open{margin-top:auto;padding-top:.4rem;font-size:.85rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
+  .card .open svg{width:.9rem;height:.9rem;transition:transform .2s}
+  .card:hover .open svg{transform:translate(3px,-3px)}
+  .state{padding:3rem 1rem;color:var(--encre-douce);font-family:var(--serif);font-style:italic;font-size:1.15rem;text-align:center}
+
+  footer{text-align:center;padding:2.5rem 1.5rem;border-top:1px solid var(--trait);color:var(--encre-douce);font-size:.84rem}
+
+  @media (max-width:640px){
+    .levels{grid-template-columns:1fr}
+    .doors{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="#/">M. Turquet <small>Mathématiques au lycée</small></a>
+</div>
+
+<main id="app"></main>
+
+<footer>Ressources mises à disposition gratuitement pour les élèves</footer>
+
+<script>
+/* =====================================================================
+   ▼ RÉGLAGES — la seule partie à personnaliser ▼
+
+   Collez ici l'adresse de vos exercices interactifs, pour chaque niveau
+   qui en possède. Laissez "" (vide) pour un niveau sans exercices :
+   le bouton s'affichera alors en « Bientôt disponible ».
+   ===================================================================== */
+const CONFIG = {
+  exercicesInteractifs: {
+    "Seconde":   "",   // pas encore d'exercices interactifs en Seconde
+    "Première":  "https://turquet78.github.io/exercices-interactifs/premiere-specifique.html",
+    "Terminale": "https://turquet78.github.io/exercices-interactifs/terminale.html"
+  }
+};
+/* ▲ Fin des réglages ▲ — le reste s'occupe de tout automatiquement. */
+
+const NIVEAUX = [
+  { key:"seconde",   nom:"Seconde",   couleur:"var(--seconde)" },
+  { key:"premiere",  nom:"Première",  couleur:"var(--premiere)" },
+  { key:"terminale", nom:"Terminale", couleur:"var(--terminale)" }
+];
+const parNom = Object.fromEntries(NIVEAUX.map(n=>[n.nom,n]));
+const parKey = Object.fromEntries(NIVEAUX.map(n=>[n.key,n]));
+
+const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
+const arrowUp = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
+const back = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M11 5l-7 7 7 7"/></svg>';
+const icDoc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>';
+const icTarget = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>';
+const search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
+
+let FICHES = [];
+
+function compterFiches(nom){ return FICHES.filter(f=>f.niveau===nom).length; }
+
+/* ---------- Vues ---------- */
+function vueAccueil(){
+  const cards = NIVEAUX.map(n=>{
+    const c = compterFiches(n.nom);
+    const meta = c>0 ? `${c} fiche${c>1?'s':''}` : 'à venir';
+    return `<a class="level-card" style="--c:${n.couleur}" href="#/${n.key}">
+      <span class="lname">${n.nom}</span>
+      <span class="meta">${meta}</span>
+      <span class="go">Voir le niveau ${arrow}</span>
+    </a>`;
+  }).join("");
+  return `<section class="view">
+    <div class="hero">
+      <p class="eyebrow">Lycée · Mathématiques</p>
+      <h1>M. Turquet</h1>
+      <p class="sub">Mathématiques au lycée</p>
+      <p class="prompt">Choisis ton niveau pour commencer</p>
+    </div>
+    <div class="levels">${cards}</div>
+  </section>`;
+}
+
+function vueNiveau(n){
+  const lien = (CONFIG.exercicesInteractifs[n.nom] || "").trim();
+  const porteFiches = `<a class="door" style="--c:${n.couleur}" href="#/${n.key}/fiches">
+      <span class="ic">${icDoc}</span>
+      <h3>Cours &amp; exercices</h3>
+      <p>Les fiches de cours et les exercices vus en classe, à consulter ou à télécharger en PDF.</p>
+      <span class="cta">Consulter ${arrowUp}</span>
+    </a>`;
+  const porteInteractif = lien
+    ? `<a class="door" style="--c:${n.couleur}" href="${lien}" target="_blank" rel="noopener">
+        <span class="ic">${icTarget}</span>
+        <h3>Exercices interactifs</h3>
+        <p>Entraîne-toi en ligne et sois évalué. Une inscription est nécessaire pour suivre tes résultats.</p>
+        <span class="cta">Accéder aux exercices ${arrowUp}</span>
+      </a>`
+    : `<div class="door disabled" style="--c:${n.couleur}">
+        <span class="ic">${icTarget}</span>
+        <h3>Exercices interactifs</h3>
+        <p>Entraîne-toi en ligne et sois évalué.</p>
+        <span class="badge">Bientôt disponible</span>
+      </div>`;
+  return `<section class="view">
+    <a class="back" href="#/">${back} Changer de niveau</a>
+    <h2 class="level-title" style="--c:${n.couleur}">${n.nom}</h2>
+    <p class="level-intro">Que veux-tu faire&nbsp;?</p>
+    <div class="doors">${porteFiches}${porteInteractif}</div>
+  </section>`;
+}
+
+function vueFiches(n){
+  return `<section class="view">
+    <a class="back" href="#/${n.key}">${back} Retour à ${n.nom}</a>
+    <h2 class="level-title" style="--c:${n.couleur}">${n.nom}</h2>
+    <p class="level-intro">Fiches de cours et exercices vus en classe.</p>
+    <div class="search">${search}<input type="text" id="q" placeholder="Rechercher une fiche, un chapitre…"></div>
+    <div id="liste"></div>
+  </section>`;
+}
+
+function rendreListe(n){
+  const liste = document.getElementById("liste");
+  if(!liste) return;
+  const q = (document.getElementById("q")?.value || "").trim().toLowerCase();
+  let items = FICHES.filter(f=>f.niveau===n.nom);
+  if(q) items = items.filter(f=> (f.titre+" "+(f.matiere||"")).toLowerCase().includes(q));
+
+  if(compterFiches(n.nom)===0){
+    liste.innerHTML = `<p class="state">Aucune fiche pour le moment dans ce niveau.<br>Déposez un PDF sur GitHub : il apparaîtra ici automatiquement.</p>`;
+    return;
+  }
+  if(items.length===0){ liste.innerHTML = `<p class="state">Aucune fiche ne correspond à ta recherche.</p>`; return; }
+
+  liste.innerHTML = `<div class="grid">` + items.map(f=>{
+    const mat = f.matiere ? `<span class="tag">${f.matiere}</span>` : "";
+    return `<a class="card" style="--c:${n.couleur}" href="${f.lien}" target="_blank" rel="noopener">
+      ${mat}<h4>${f.titre}</h4>
+      <span class="open">Ouvrir ${arrowUp}</span></a>`;
+  }).join("") + `</div>`;
+}
+
+/* ---------- Routeur ---------- */
+function router(){
+  const app = document.getElementById("app");
+  const h = location.hash.replace(/^#\/?/,"");
+  const [levelKey, sub] = h.split("/");
+  const n = parKey[levelKey];
+
+  if(!n){ app.innerHTML = vueAccueil(); window.scrollTo(0,0); return; }
+  if(sub==="fiches"){
+    app.innerHTML = vueFiches(n);
+    rendreListe(n);
+    document.getElementById("q")?.addEventListener("input", ()=>rendreListe(n));
+    window.scrollTo(0,0); return;
+  }
+  app.innerHTML = vueNiveau(n);
+  window.scrollTo(0,0);
+}
+
+window.addEventListener("hashchange", router);
+
+fetch("fiches.json")
+  .then(r=> r.ok ? r.json() : [])
+  .then(d=>{ FICHES = Array.isArray(d)? d : []; router(); })
+  .catch(()=>{ FICHES=[]; router(); });
+</script>
+</body>
+</html>
