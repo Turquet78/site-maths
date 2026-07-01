@@ -105,6 +105,16 @@
   .dm-home-btn{display:inline-flex;align-items:center;gap:.45rem;background:var(--terminale);color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;padding:.7rem 1.3rem;border-radius:999px;transition:transform .15s ease,box-shadow .2s ease}
   .dm-home-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(156,51,32,.65)}
   .dm-home-btn svg{width:.95rem;height:.95rem}
+  /* Bannière + liste des devoirs */
+  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--terminale);border-radius:16px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .dm-banner:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(34,29,21,.4)}
+  .dm-banner-ic{font-size:1.5rem;line-height:1}
+  .dm-banner-txt{display:flex;flex-direction:column;min-width:0}
+  .dm-banner-txt strong{font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--terminale);letter-spacing:-.01em}
+  .dm-banner-txt small{color:var(--encre-douce);font-size:.86rem}
+  .dm-banner-go{margin-left:auto;font-weight:600;font-size:.9rem;color:var(--terminale);display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
+  .dm-banner-go svg{width:.9rem;height:.9rem}
+  .dm-list{display:grid;gap:1.3rem}
 </style>
 </head>
 <body>
@@ -200,7 +210,11 @@ function vueNiveau(n){
     <a class="back" href="#/">${back} Changer de niveau</a>
     <h2 class="level-title" style="--c:${n.couleur}">${n.nom}</h2>
     <p class="level-intro">Que veux-tu faire&nbsp;?</p>
-    ${n.key==="terminale" ? '<div id="devoirMaison" class="dm-home" hidden></div>' : ''}
+    ${n.key==="terminale" ? `<a class="dm-banner" href="#/${n.key}/devoirs">
+        <span class="dm-banner-ic">📌</span>
+        <span class="dm-banner-txt"><strong>Devoirs à la maison</strong><small>Consulte les devoirs à faire à la maison</small></span>
+        <span class="dm-banner-go">Voir ${arrow}</span>
+      </a>` : ''}
     <div class="doors">${porteFiches}${porteInteractif}</div>
   </section>`;
 }
@@ -265,25 +279,33 @@ function dmClient(){
 }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-async function chargerDevoirMaison(n){
-  const host = document.getElementById("devoirMaison");
-  if(!host) return;                                  // seulement sur la page Terminale
-  const sb = dmClient();
-  if(!sb) return;                                    // si Supabase n'a pas chargé : page normale
+/* Vue « Devoirs à la maison » — page dédiée listant tous les devoirs actifs. */
+function vueDevoirs(n){
+  return `<section class="view">
+    <a class="back" href="#/${n.key}">${back} Retour à ${n.nom}</a>
+    <h2 class="level-title" style="--c:${n.couleur}">Devoirs à la maison</h2>
+    <p class="level-intro">Les devoirs à faire pour la ${n.nom}. Clique sur « Faire le devoir » pour les réaliser dans les exercices interactifs (connexion nécessaire pour enregistrer tes résultats).</p>
+    <div id="devoirsListe"><p class="state">Chargement…</p></div>
+  </section>`;
+}
+
+async function chargerDevoirsListe(n){
+  const host = document.getElementById("devoirsListe");
+  if(!host) return;
   const lien = (CONFIG.exercicesInteractifs[n.nom] || "").trim();
+  const sb = dmClient();
+  if(!sb){ host.innerHTML = `<p class="state">Impossible de charger les devoirs pour le moment.</p>`; return; }
   try{
     const { data, error } = await sb.from("parametres").select("valeurs").eq("id",1).single();
-    if(error || !data) return;
+    if(error || !data){ host.innerHTML = `<p class="state">Aucun devoir en cours pour l'instant.</p>`; return; }
     const v = data.valeurs || {};
     let devoirs = Array.isArray(v.devoirs) ? v.devoirs
                 : (v.devoir && typeof v.devoir==="object" ? [v.devoir] : []);
     const actifs = devoirs.filter(d => d && d.actif!==false && Array.isArray(d.exercices) && d.exercices.length);
-    if(!actifs.length) return;                       // aucun devoir en cours → on n'affiche rien
-    actifs.sort((a,b)=>(a.num||0)-(b.num||0));
-    const dev = actifs[actifs.length-1];             // le dernier (plus grand numéro)
-    host.innerHTML = renderDevoirHome(dev, lien);
-    host.hidden = false;
-  }catch(e){ /* silencieux : la page reste utilisable même sans connexion */ }
+    if(!actifs.length){ host.innerHTML = `<p class="state">Aucun devoir en cours pour l'instant.</p>`; return; }
+    actifs.sort((a,b)=>(b.num||0)-(a.num||0));        // le plus récent en premier
+    host.innerHTML = `<div class="dm-list">` + actifs.map(dev=>renderDevoirHome(dev, lien)).join("") + `</div>`;
+  }catch(e){ host.innerHTML = `<p class="state">Impossible de charger les devoirs (connexion).</p>`; }
 }
 
 function renderDevoirHome(dev, lien){
@@ -326,8 +348,12 @@ function router(){
     document.getElementById("q")?.addEventListener("input", ()=>rendreListe(n));
     window.scrollTo(0,0); return;
   }
+  if(sub==="devoirs"){
+    app.innerHTML = vueDevoirs(n);
+    chargerDevoirsListe(n);
+    window.scrollTo(0,0); return;
+  }
   app.innerHTML = vueNiveau(n);
-  chargerDevoirMaison(n);
   window.scrollTo(0,0);
 }
 
