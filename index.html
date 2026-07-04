@@ -32,7 +32,7 @@
 
   /* Accueil */
   .hero{text-align:center;padding:2.5rem 0 2.8rem}
-  .eyebrow{font-size:.76rem;letter-spacing:.28em;text-transform:uppercase;color:var(--encre-douce);margin-bottom:1rem}
+  .eyebrow{font-size:.76rem;letter-spacing:.28em;text-transform:uppercase;color:varA(--encre-douce);margin-bottom:1rem}
   .hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(2.4rem,6.5vw,4.2rem);line-height:1;letter-spacing:-.02em}
   .hero .sub{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(1.3rem,3.5vw,1.9rem);color:var(--terminale);margin-top:.3rem}
   .prompt{margin-top:2.3rem;color:var(--encre-douce);font-size:1rem;letter-spacing:.02em}
@@ -92,9 +92,9 @@
 
   /* Devoir à la maison (page niveau) */
   .dm-home{margin-bottom:1.6rem}
-  .dm-home-inner{background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--terminale);border-radius:16px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
+  .dm-home-inner{background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--c, var(--terminale));border-radius:16px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
   .dm-home-head{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.3rem}
-  .dm-home-badge{font-family:var(--sans);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--terminale);padding:.3rem .7rem;border-radius:999px;white-space:nowrap}
+  .dm-home-badge{font-family:var(--sans);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--c, var(--terminale));padding:.3rem .7rem;border-radius:999px;white-space:nowrap}
   .dm-home-title{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
   .dm-home-cours{color:var(--encre-douce);font-size:.95rem;line-height:1.55;margin:.7rem 0 .2rem}
   .dm-home-list{list-style:none;margin:.85rem 0 .3rem;display:grid;gap:.5rem}
@@ -102,17 +102,17 @@
   .dm-home-ex{font-family:var(--serif);font-weight:600;font-size:1.02rem;color:var(--encre)}
   .dm-home-modes{font-size:.82rem;color:var(--encre-douce);font-weight:500}
   .dm-home-note{font-size:.83rem;color:var(--encre-douce);margin:.75rem 0 1rem}
-  .dm-home-btn{display:inline-flex;align-items:center;gap:.45rem;background:var(--terminale);color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;padding:.7rem 1.3rem;border-radius:999px;transition:transform .15s ease,box-shadow .2s ease}
-  .dm-home-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(156,51,32,.65)}
+  .dm-home-btn{display:inline-flex;align-items:center;gap:.45rem;background:var(--c, var(--terminale));color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;padding:.7rem 1.3rem;border-radius:999px;transition:transform .15s ease,box-shadow .2s ease}
+  .dm-home-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(34,29,21,.45)}
   .dm-home-btn svg{width:.95rem;height:.95rem}
   /* Bannière + liste des devoirs */
-  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--terminale);border-radius:16px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--c, var(--terminale));border-radius:16px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
   .dm-banner:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(34,29,21,.4)}
   .dm-banner-ic{font-size:1.5rem;line-height:1}
   .dm-banner-txt{display:flex;flex-direction:column;min-width:0}
-  .dm-banner-txt strong{font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--terminale);letter-spacing:-.01em}
+  .dm-banner-txt strong{font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--c, var(--terminale));letter-spacing:-.01em}
   .dm-banner-txt small{color:var(--encre-douce);font-size:.86rem}
-  .dm-banner-go{margin-left:auto;font-weight:600;font-size:.9rem;color:var(--terminale);display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
+  .dm-banner-go{margin-left:auto;font-weight:600;font-size:.9rem;color:var(--c, var(--terminale));display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
   .dm-banner-go svg{width:.9rem;height:.9rem}
   .dm-list{display:grid;gap:1.3rem}
 </style>
@@ -210,11 +210,11 @@ function vueNiveau(n){
     <a class="back" href="#/">${back} Changer de niveau</a>
     <h2 class="level-title" style="--c:${n.couleur}">${n.nom}</h2>
     <p class="level-intro">Que veux-tu faire&nbsp;?</p>
-    ${n.key==="terminale" ? `<a class="dm-banner" href="#/${n.key}/devoirs">
+    <a class="dm-banner" style="--c:${n.couleur}" href="#/${n.key}/devoirs">
         <span class="dm-banner-ic">📌</span>
         <span class="dm-banner-txt"><strong>Devoirs à la maison</strong><small>Consulte les devoirs à faire à la maison</small></span>
         <span class="dm-banner-go">Voir ${arrow}</span>
-      </a>` : ''}
+      </a>
     <div class="doors">${porteFiches}${porteInteractif}</div>
   </section>`;
 }
@@ -254,28 +254,63 @@ function rendreListe(n){
    La page va chercher le dernier devoir actif directement dans le tableau de
    bord (Supabase). Tu n'as donc RIEN à modifier ici quand tu crées un nouveau
    devoir : il apparaît tout seul. */
-const DM_SUPABASE_URL = "https://rcxenttecucvcebjlmcw.supabase.co";
-const DM_SUPABASE_KEY = "sb_publishable_lhXHUAI-GbOEEzZvrhk2gQ_QhS_5MMm";
-/* Correspondance « id d'exercice → numéro + nom ».
-   À mettre à jour UNIQUEMENT si tu renumérotes/renommes des exercices (rare). */
-const DM_EXOS = {
-  "derivee-exp":       {num:"1.1", nom:"Dérivée × exp"},
-  "equation-tangente": {num:"1.2", nom:"Équation de tangente"},
-  "derivees":          {num:"1.3", nom:"Dérivées"},
-  "suites":            {num:"2.1", nom:"Suites"},
-  "tvi":               {num:"3.1", nom:"TVI"},
-  "tvi-redaction":     {num:"3.2", nom:"TVI rédigé"},
-  "signe-premier-degre":{num:"4.1", nom:"Signe du 1er degré"},
-  "signe-second-degre":{num:"4.2", nom:"Signe du 2nd degré"},
-  "signes-variations": {num:"4.3", nom:"Signes & variations"}
+/* ---------- Devoirs à la maison : configuration PAR NIVEAU ----------
+   Chaque niveau lit ses devoirs dans SON tableau de bord (projet Supabase +
+   table). Tu n'as rien à modifier ici quand tu crées un devoir : il apparaît
+   tout seul sur la page du niveau concerné.
+   La correspondance « id d'exercice → numéro + nom » ne sert qu'à l'affichage
+   (à mettre à jour seulement si tu renommes/renumérotes des exercices). */
+const DM_CFG = {
+  seconde: {
+    url:"https://rcxenttecucvcebjlmcw.supabase.co",
+    key:"sb_publishable_lhXHUAI-GbOEEzZvrhk2gQ_QhS_5MMm",
+    table:"parametres_2nde",
+    exos:{
+      "lecture-variations":   {num:"1.1", nom:"Lecture graphique — variations"},
+      "pourcentage":          {num:"2.1", nom:"Pourcentage d’un nombre"},
+      "augmenter-pourcentage":{num:"2.2", nom:"Augmenter d’un pourcentage"},
+      "diminuer-pourcentage": {num:"2.3", nom:"Diminuer d’un pourcentage"}
+    }
+  },
+  premiere: {
+    url:"https://slekpucupsdxcrojnklo.supabase.co",
+    key:"sb_publishable_SdfQsmFsRbO1PQoARg1mxQ_gI3_DYdE",
+    table:"parametres",
+    exos:{
+      "calcul-mental":        {num:"1.1", nom:"Calcul mental"},
+      "multiplication-posee": {num:"1.2", nom:"Multiplication posée"},
+      "mult-decimaux":        {num:"1.3", nom:"Multiplier des décimaux"},
+      "mult-dec-un":          {num:"1.4", nom:"Multiplier des décimaux (1,…)"},
+      "fractions-decimales":  {num:"2.1", nom:"Fractions décimales"},
+      "pourcentage":          {num:"3.1", nom:"Pourcentage d’un nombre"},
+      "augmenter-pourcentage":{num:"3.2", nom:"Augmenter d’un pourcentage"},
+      "diminuer-pourcentage": {num:"3.3", nom:"Diminuer d’un pourcentage"}
+    }
+  },
+  terminale: {
+    url:"https://rcxenttecucvcebjlmcw.supabase.co",
+    key:"sb_publishable_lhXHUAI-GbOEEzZvrhk2gQ_QhS_5MMm",
+    table:"parametres",
+    exos:{
+      "derivee-exp":       {num:"1.1", nom:"Dérivée × exp"},
+      "equation-tangente": {num:"1.2", nom:"Équation de tangente"},
+      "derivees":          {num:"1.3", nom:"Dérivées"},
+      "suites":            {num:"2.1", nom:"Suites"},
+      "tvi":               {num:"3.1", nom:"TVI"},
+      "tvi-redaction":     {num:"3.2", nom:"TVI rédigé"},
+      "signe-premier-degre":{num:"4.1", nom:"Signe du 1er degré"},
+      "signe-second-degre":{num:"4.2", nom:"Signe du 2nd degré"},
+      "signes-variations": {num:"4.3", nom:"Signes & variations"}
+    }
+  }
 };
-let _dmClient = null;
-function dmClient(){
-  if(_dmClient) return _dmClient;
+const _dmClients = {};
+function dmClient(url, key){
+  if(_dmClients[url]) return _dmClients[url];
   if(!window.supabase || !window.supabase.createClient) return null;
-  try{ _dmClient = window.supabase.createClient(DM_SUPABASE_URL, DM_SUPABASE_KEY); }
-  catch(e){ _dmClient = null; }
-  return _dmClient;
+  try{ _dmClients[url] = window.supabase.createClient(url, key); }
+  catch(e){ _dmClients[url] = null; }
+  return _dmClients[url];
 }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
@@ -285,18 +320,20 @@ function vueDevoirs(n){
     <a class="back" href="#/${n.key}">${back} Retour à ${n.nom}</a>
     <h2 class="level-title" style="--c:${n.couleur}">Devoirs à la maison</h2>
     <p class="level-intro">Les devoirs à faire pour la ${n.nom}. Clique sur « Faire le devoir » pour les réaliser dans les exercices interactifs (connexion nécessaire pour enregistrer tes résultats).</p>
-    <div id="devoirsListe"><p class="state">Chargement…</p></div>
+    <div id="devoirsListe" style="--c:${n.couleur}"><p class="state">Chargement…</p></div>
   </section>`;
 }
 
 async function chargerDevoirsListe(n){
   const host = document.getElementById("devoirsListe");
   if(!host) return;
+  const conf = DM_CFG[n.key];
   const lien = (CONFIG.exercicesInteractifs[n.nom] || "").trim();
-  const sb = dmClient();
+  if(!conf){ host.innerHTML = `<p class="state">Aucun devoir en cours pour l'instant.</p>`; return; }
+  const sb = dmClient(conf.url, conf.key);
   if(!sb){ host.innerHTML = `<p class="state">Impossible de charger les devoirs pour le moment.</p>`; return; }
   try{
-    const { data, error } = await sb.from("parametres").select("valeurs").eq("id",1).single();
+    const { data, error } = await sb.from(conf.table).select("valeurs").eq("id",1).single();
     if(error || !data){ host.innerHTML = `<p class="state">Aucun devoir en cours pour l'instant.</p>`; return; }
     const v = data.valeurs || {};
     let devoirs = Array.isArray(v.devoirs) ? v.devoirs
@@ -304,17 +341,18 @@ async function chargerDevoirsListe(n){
     const actifs = devoirs.filter(d => d && d.actif!==false && Array.isArray(d.exercices) && d.exercices.length);
     if(!actifs.length){ host.innerHTML = `<p class="state">Aucun devoir en cours pour l'instant.</p>`; return; }
     actifs.sort((a,b)=>(b.num||0)-(a.num||0));        // le plus récent en premier
-    host.innerHTML = `<div class="dm-list">` + actifs.map(dev=>renderDevoirHome(dev, lien)).join("") + `</div>`;
+    host.innerHTML = `<div class="dm-list">` + actifs.map(dev=>renderDevoirHome(dev, lien, conf.exos)).join("") + `</div>`;
   }catch(e){ host.innerHTML = `<p class="state">Impossible de charger les devoirs (connexion).</p>`; }
 }
 
-function renderDevoirHome(dev, lien){
+function renderDevoirHome(dev, lien, exosMap){
+  exosMap = exosMap || {};
   const num = (dev.num!=null) ? dev.num : "";
   const titre = dev.titre || "Devoir à la maison";
   const cours = (dev.cours || "").trim();
   const coursHtml = cours ? `<p class="dm-home-cours">${escapeHtml(cours).replace(/\n/g,"<br>")}</p>` : "";
   const exos = (dev.exercices||[]).map(ex=>{
-    const info = DM_EXOS[ex.id] || {};
+    const info = exosMap[ex.id] || {};
     const numEx = ex.num || info.num || "";
     const nom   = ex.nom || info.nom || ex.id;
     const label = (numEx ? numEx+" · " : "") + nom;
