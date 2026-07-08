@@ -115,6 +115,11 @@
   .dm-banner-go{margin-left:auto;font-weight:600;font-size:.9rem;color:var(--c, var(--terminale));display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
   .dm-banner-go svg{width:.9rem;height:.9rem}
   .dm-list{display:grid;gap:1.3rem}
+  .valeurs{margin-top:3.6rem;padding-top:2.6rem;border-top:1px solid var(--trait);text-align:center}
+  .valeurs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin:1.3rem 0 2.1rem}
+  .valeur{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.16rem;color:var(--encre);line-height:1.35}
+  .credo{font-family:var(--serif);font-weight:400;font-size:clamp(1.15rem,2.6vw,1.5rem);color:var(--terminale);line-height:1.45;max-width:40rem;margin:0 auto}
+  @media(max-width:640px){.valeurs-grid{grid-template-columns:1fr;gap:.9rem}}
 </style>
 </head>
 <body>
@@ -182,6 +187,15 @@ function vueAccueil(){
       <p class="prompt">Choisis ton niveau pour commencer</p>
     </div>
     <div class="levels">${cards}</div>
+    <section class="valeurs">
+      <p class="eyebrow">Ma façon d'enseigner</p>
+      <div class="valeurs-grid">
+        <p class="valeur">Exigeant avec justice, jamais avec autorité.</p>
+        <p class="valeur">Comprendre plutôt qu'imposer.</p>
+        <p class="valeur">La confiance plutôt que la contrainte.</p>
+      </div>
+      <p class="credo">« Je crois qu'on apprend mieux dans un climat de respect, d'écoute et de justice. »</p>
+    </section>
   </section>`;
 }
 
