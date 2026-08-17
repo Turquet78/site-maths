@@ -280,25 +280,50 @@ const DM_CFG = {
     key:"sb_publishable_lhXHUAI-GbOEEzZvrhk2gQ_QhS_5MMm",
     table:"parametres_2nde",
     exos:{
-      "lecture-variations":   {num:"1.1", nom:"Lecture graphique — variations"},
-      "pourcentage":          {num:"2.1", nom:"Pourcentage d’un nombre"},
-      "augmenter-pourcentage":{num:"2.2", nom:"Augmenter d’un pourcentage"},
-      "diminuer-pourcentage": {num:"2.3", nom:"Diminuer d’un pourcentage"}
-    }
-  },
-  premiere: {
-    url:"https://slekpucupsdxcrojnklo.supabase.co",
-    key:"sb_publishable_SdfQsmFsRbO1PQoARg1mxQ_gI3_DYdE",
-    table:"parametres",
-    exos:{
-      "calcul-mental":        {num:"1.1", nom:"Calcul mental"},
-      "multiplication-posee": {num:"1.2", nom:"Multiplication posée"},
-      "mult-decimaux":        {num:"1.3", nom:"Multiplier des décimaux"},
-      "mult-dec-un":          {num:"1.4", nom:"Multiplier des décimaux (1,…)"},
-      "fractions-decimales":  {num:"2.1", nom:"Fractions décimales"},
+      "ensembles-nombres":    {num:"1.1", nom:"Ensembles de nombres — niveau 1"},
+      "ensembles-nombres-2":  {num:"1.2", nom:"Ensembles de nombres — niveau 2"},
+      "definitions-ensembles":{num:"1.3", nom:"Définitions des ensembles"},
+      "plus-petit-ensemble":  {num:"1.4", nom:"Le plus petit ensemble"},
+      "lecture-variations":   {num:"2.1", nom:"Lecture graphique — variations"},
       "pourcentage":          {num:"3.1", nom:"Pourcentage d’un nombre"},
       "augmenter-pourcentage":{num:"3.2", nom:"Augmenter d’un pourcentage"},
       "diminuer-pourcentage": {num:"3.3", nom:"Diminuer d’un pourcentage"}
+    }
+  },
+  premiere: {
+    url:"https://rcxenttecucvcebjlmcw.supabase.co",
+    key:"sb_publishable_lhXHUAI-GbOEEzZvrhk2gQ_QhS_5MMm",
+    table:"parametres_1ere",
+    exos:{
+      "addition-soustraction":       {num:"1.1", nom:"Additions et soustractions"},
+      "tables-multiplication":       {num:"1.2", nom:"Tables de multiplication"},
+      "tables-multiplication-2":     {num:"1.3", nom:"Tables de multiplication — niveau 2"},
+      "calcul-mental":               {num:"1.4", nom:"Calcul mental"},
+      "multiplication-posee":        {num:"1.5", nom:"Multiplication posée"},
+      "fractions-decimales":         {num:"1.6", nom:"Fractions décimales"},
+      "mult-decimaux":               {num:"1.7", nom:"Multiplier des décimaux"},
+      "mult-dec-un":                 {num:"1.8", nom:"Multiplier des décimaux (1,…)"},
+      "fraction-pourcentage":        {num:"2.1.1", nom:"Fraction et pourcentage"},
+      "pourcentage-colonnes":        {num:"2.1.2", nom:"Prendre un pourcentage en coloriant deux colonnes de même hauteur"},
+      "pourcentage":                 {num:"2.1.3", nom:"Pourcentage d’un nombre"},
+      "pourcentage-depart":          {num:"2.1.4", nom:"Retrouver la valeur initiale"},
+      "pourcentage-taux":            {num:"2.1.5", nom:"Retrouver le pourcentage"},
+      "augmenter-pourcentage":       {num:"2.2.1", nom:"Augmenter d’un pourcentage en calculant le coefficient multiplicateur puis en effectuant une multiplication."},
+      "augmenter-addition":          {num:"2.2.2", nom:"Augmenter d’un pourcentage en calculant de combien la valeur augmente puis en effectuant une addition."},
+      "augmenter-depart":            {num:"2.2.3", nom:"Retrouver la valeur initiale après une hausse en calculant le coefficient multiplicateur puis en effectuant une multiplication."},
+      "augmenter-depart-addition":   {num:"2.2.4", nom:"Retrouver la valeur initiale après une hausse en calculant de combien la valeur augmente puis en effectuant une addition."},
+      "augmenter-taux":              {num:"2.2.5", nom:"Retrouver le pourcentage d’une hausse en calculant le coefficient multiplicateur puis en effectuant une multiplication."},
+      "augmenter-taux-addition":     {num:"2.2.6", nom:"Retrouver le pourcentage d’une hausse en calculant de combien la valeur augmente puis en effectuant une addition."},
+      "hausses-successives":         {num:"2.2.7", nom:"Hausse suivie d’une hausse"},
+      "diminuer-pourcentage":        {num:"2.3.1", nom:"Diminuer d’un pourcentage en calculant le coefficient multiplicateur puis en effectuant une multiplication."},
+      "diminuer-soustraction":       {num:"2.3.2", nom:"Diminuer d’un pourcentage en calculant de combien la valeur diminue puis en effectuant une soustraction."},
+      "diminuer-depart":             {num:"2.3.3", nom:"Retrouver la valeur initiale après une baisse en calculant le coefficient multiplicateur puis en effectuant une multiplication."},
+      "diminuer-depart-soustraction":{num:"2.3.4", nom:"Retrouver la valeur initiale après une baisse en calculant de combien la valeur diminue puis en effectuant une soustraction."},
+      "diminuer-taux":               {num:"2.3.5", nom:"Retrouver le pourcentage d’une baisse en calculant le coefficient multiplicateur puis en effectuant une multiplication."},
+      "diminuer-taux-soustraction":  {num:"2.3.6", nom:"Retrouver le pourcentage d’une baisse en calculant de combien la valeur diminue puis en effectuant une soustraction."},
+      "baisses-successives":         {num:"2.3.7", nom:"Baisse suivie d’une baisse"},
+      "lire-coefficient":            {num:"2.4.1", nom:"Lire un coefficient multiplicateur"},
+      "synthese-pourcentages":       {num:"2.5.1", nom:"Synthèse sur les pourcentages"}
     }
   },
   terminale: {
@@ -306,15 +331,34 @@ const DM_CFG = {
     key:"sb_publishable_lhXHUAI-GbOEEzZvrhk2gQ_QhS_5MMm",
     table:"parametres",
     exos:{
-      "derivee-exp":       {num:"1.1", nom:"Dérivée × exp"},
-      "equation-tangente": {num:"1.2", nom:"Équation de tangente"},
-      "derivees":          {num:"1.3", nom:"Dérivées"},
-      "suites":            {num:"2.1", nom:"Suites"},
-      "tvi":               {num:"3.1", nom:"TVI"},
-      "tvi-redaction":     {num:"3.2", nom:"TVI rédigé"},
-      "signe-premier-degre":{num:"4.1", nom:"Signe du 1er degré"},
-      "signe-second-degre":{num:"4.2", nom:"Signe du 2nd degré"},
-      "signes-variations": {num:"4.3", nom:"Signes & variations"}
+      "signe-premier-degre":   {num:"1.1", nom:"Signe du 1er degré"},
+      "signe-second-degre":    {num:"1.2", nom:"Signe du 2nd degré"},
+      "signes-variations":     {num:"1.3", nom:"Signes & variations"},
+      "signe-produit":         {num:"1.4", nom:"Signe d’un produit ou d’un quotient"},
+      "signe-quotient-carre":  {num:"1.5", nom:"Signe de (ax+b)/(cx+d)²"},
+      "derivee-exp":           {num:"2.1", nom:"Dérivée d’un produit avec exponentielle niveau 1"},
+      "derivee-exp-2":         {num:"2.2", nom:"Dérivée d’un produit avec exponentielle niveau 2"},
+      "derivee-exp-3":         {num:"2.3", nom:"Dérivée d’un produit avec exponentielle niveau 3"},
+      "derivee-exp-quotient":  {num:"2.4", nom:"Dérivée d’un quotient avec exponentielle niveau 1"},
+      "derivee-exp-quotient-2":{num:"2.5", nom:"Dérivée d’un quotient avec exponentielle niveau 2"},
+      "equation-droite-h-v":   {num:"3.1", nom:"Équation de droite horizontale ou verticale"},
+      "limites-graphiques":    {num:"3.2", nom:"Conjecturer graphiquement les limites niveau 1"},
+      "limites-graphiques-2":  {num:"3.3", nom:"Conjecturer graphiquement les limites niveau 2"},
+      "limites-graphiques-3":  {num:"3.4", nom:"Conjecturer les limites d’après un tableau niveau 3"},
+      "limites-redaction":     {num:"3.5", nom:"Limites — rédaction"},
+      "tvi":                   {num:"4.1", nom:"TVI"},
+      "tvi-redaction":         {num:"4.2", nom:"TVI rédigé"},
+      "tvi-contre-exemples":   {num:"4.3", nom:"TVI — contre-exemples"},
+      "tvi-nombre-solutions":  {num:"4.4", nom:"TVI — nombre de solutions"},
+      "tvi-lecture-graphique": {num:"4.5", nom:"TVI — solutions sur le graphique"},
+      "equation-tangente":     {num:"5.1", nom:"Équation de tangente"},
+      "etude-fonction":        {num:"5.2", nom:"Étude de fonction — signe de f ′ et variations"},
+      "etude-quotient":        {num:"5.3", nom:"Fonction quotient — domaine, dérivée et variations"},
+      "suite-explicite":       {num:"6.1", nom:"Suites — type, raison et formule explicite"},
+      "suite-auxiliaire":      {num:"6.2", nom:"Suites — suite auxiliaire géométrique"},
+      "suites-encadrement":    {num:"6.3", nom:"Suites — encadrements (préparer la récurrence)"},
+      "recurrence-encadrement":{num:"6.4", nom:"Récurrence — encadrement de Uₙ"},
+      "recurrence-complete":   {num:"6.5", nom:"Récurrence — conjecturer puis démontrer"}
     }
   }
 };
@@ -352,10 +396,18 @@ async function chargerDevoirsListe(n){
     const v = data.valeurs || {};
     let devoirs = Array.isArray(v.devoirs) ? v.devoirs
                 : (v.devoir && typeof v.devoir==="object" ? [v.devoir] : []);
+    /* La correspondance « identifiant -> numéro + nom » écrite dans la ligne
+       de réglages par l'application fait foi : un numéro se DÉDUIT de la
+       position de l'exercice dans ses thèmes, il ne s'écrit nulle part. La
+       liste ci-dessus n'est qu'un recours pour les devoirs enregistrés avant
+       que l'application ne la publie — recopiée à la main, elle s'était figée
+       sur la numérotation de mars et annonçait « 3.1 » pour l'exercice 2.1.3. */
+    const carte = Object.assign({}, conf.exos,
+                                (v.exos && typeof v.exos === "object") ? v.exos : {});
     const actifs = devoirs.filter(d => d && d.actif!==false && Array.isArray(d.exercices) && d.exercices.length);
     if(!actifs.length){ host.innerHTML = `<p class="state">Aucun devoir en cours pour l'instant.</p>`; return; }
     actifs.sort((a,b)=>(b.num||0)-(a.num||0));        // le plus récent en premier
-    host.innerHTML = `<div class="dm-list">` + actifs.map(dev=>renderDevoirHome(dev, lien, conf.exos)).join("") + `</div>`;
+    host.innerHTML = `<div class="dm-list">` + actifs.map(dev=>renderDevoirHome(dev, lien, carte)).join("") + `</div>`;
   }catch(e){ host.innerHTML = `<p class="state">Impossible de charger les devoirs (connexion).</p>`; }
 }
 
