@@ -251,15 +251,15 @@ function rendreListe(n){
   if(q) items = items.filter(f=> (f.titre+" "+(f.matiere||"")).toLowerCase().includes(q));
 
   if(compterFiches(n.nom)===0){
-    liste.innerHTML = `<p class="state">Aucune fiche pour le moment dans ce niveau.<br>Déposez un PDF sur GitHub : il apparaîtra ici automatiquement.</p>`;
+    liste.innerHTML = `<p class="state">Aucune fiche pour le moment dans ce niveau.<br>Déposez un PDF depuis le tableau de bord (onglet « Cours en PDF »), ou dans le dossier <code>fiches/</code> sur GitHub : il apparaîtra ici automatiquement.</p>`;
     return;
   }
   if(items.length===0){ liste.innerHTML = `<p class="state">Aucune fiche ne correspond à ta recherche.</p>`; return; }
 
   liste.innerHTML = `<div class="grid">` + items.map(f=>{
-    const mat = f.matiere ? `<span class="tag">${f.matiere}</span>` : "";
-    return `<a class="card" style="--c:${n.couleur}" href="${f.lien}" target="_blank" rel="noopener">
-      ${mat}<h4>${f.titre}</h4>
+    const mat = f.matiere ? `<span class="tag">${escapeHtml(f.matiere)}</span>` : "";
+    return `<a class="card" style="--c:${n.couleur}" href="${escapeHtml(f.lien)}" target="_blank" rel="noopener">
+      ${mat}<h4>${escapeHtml(f.titre)}</h4>
       <span class="open">Ouvrir ${arrowUp}</span></a>`;
   }).join("") + `</div>`;
 }
@@ -463,10 +463,78 @@ function router(){
 
 window.addEventListener("hashchange", router);
 
+/* ---------- Cours déposés depuis le tableau de bord ----------
+   Deux sources alimentent la MÊME liste de fiches :
+     · les PDF versés dans le dépôt (fiches/<Niveau>/<Matière>/…), recensés
+       par build.mjs dans fiches.json ;
+     · ceux que le professeur dépose depuis le tableau de bord des exercices
+       interactifs (onglet « Cours en PDF »). Leurs titres vivent dans la même
+       ligne de réglages que les devoirs — parametres_….valeurs.cours — et le
+       fichier lui-même dans le bucket « cours ».
+
+   Le bucket est PUBLIC (migration 006 du dépôt exercices-interactifs) : ce
+   site n'a aucun élève connecté, il ne peut donc pas demander d'adresse
+   signée. Ces PDF sont au même niveau d'exposition que ceux du dossier
+   fiches/, publics eux aussi.
+
+   DEUX SOURCES, DEUX SILENCES POSSIBLES. Si Supabase ne répond pas, la page
+   doit afficher les fiches du dépôt et rien de moins : une source muette ne
+   doit jamais emporter l'autre. Les fiches s'affichent donc DÈS que
+   fiches.json arrive, sans attendre Supabase ; les cours déposés viennent
+   s'ajouter ensuite, et seulement s'il y en a. */
+const COURS_BUCKET = "cours";
+
+function lienPublicCours(url, chemin){
+  return url.replace(/\/+$/,"") + "/storage/v1/object/public/" + COURS_BUCKET + "/"
+       + String(chemin).split("/").map(encodeURIComponent).join("/");
+}
+
+async function coursDuNiveau(n){
+  const conf = DM_CFG[n.key];
+  if(!conf) return [];
+  const sb = dmClient(conf.url, conf.key);
+  if(!sb) return [];
+  try{
+    const { data, error } = await sb.from(conf.table).select("valeurs").eq("id",1).single();
+    if(error || !data) return [];
+    const v = data.valeurs || {};
+    const cours = Array.isArray(v.cours) ? v.cours : [];
+    return cours
+      .filter(c => c && typeof c.chemin === "string" && c.chemin.trim())
+      .map(c => ({
+        niveau: n.nom,
+        matiere: "Mathématiques",
+        titre: (c.titre && String(c.titre).trim()) || "Cours",
+        lien: lienPublicCours(conf.url, c.chemin.trim()),
+      }));
+  }catch(e){ return []; }
+}
+
+function trierFiches(){
+  FICHES.sort((a, b) =>
+    (a.matiere || "").localeCompare(b.matiere || "", "fr") ||
+    a.titre.localeCompare(b.titre, "fr"));
+}
+
 fetch("fiches.json")
   .then(r=> r.ok ? r.json() : [])
-  .then(d=>{ FICHES = Array.isArray(d)? d : []; router(); })
-  .catch(()=>{ FICHES=[]; router(); });
+  .catch(()=> [])
+  .then(d=>{
+    FICHES = Array.isArray(d) ? d : [];
+    router();
+    return Promise.all(NIVEAUX.map(coursDuNiveau)).catch(()=> []);
+  })
+  .then(listes=>{
+    const cours = [].concat.apply([], listes || []);
+    if(!cours.length) return;
+    FICHES = FICHES.concat(cours);
+    trierFiches();
+    /* On ne redessine que si rien n'est en train d'être tapé : sinon la
+       recherche de l'élève serait effacée sous ses doigts. */
+    const q = document.getElementById("q");
+    if(!q || !q.value.trim()) router();
+  })
+  .catch(()=>{});
 </script>
 </body>
 </html>
