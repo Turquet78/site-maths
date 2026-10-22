@@ -13,7 +13,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- supabase-js ne sert ici qu'aux devoirs et aux cours déposés, lus APRÈS
+     l'affichage : chargé en « defer », il ne retarde plus l'apparition de la
+     page, et dmClient() l'attend. Version EXACTE : servie immuable par le CDN,
+     gardée un an par le navigateur (« @2 » était revalidé chaque semaine). -->
+<link rel="preconnect" href="https://rcxenttecucvcebjlmcw.supabase.co" crossorigin>
+<script id="supabase-js" defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3"></script>
 <style>
   :root{
     --papier:#f4eee1; --papier-fonce:#ece3d1; --carte:#fffdf7;
@@ -21,14 +26,40 @@
     --trait:rgba(34,29,21,.12); --trait-fort:rgba(34,29,21,.22);
     --seconde:#1f6f5c; --premiere:#94590d; --terminale:#9c3320;
     --serif:'Fraunces',Georgia,serif; --sans:'Spline Sans',-apple-system,sans-serif;
+    --barre:rgba(244,238,225,.86); --point:rgba(34,29,21,.035);
+    --ombre:rgba(34,29,21,.45); --sur-couleur:#fff;
+    color-scheme:light dark;
+  }
+  /* Mode sombre : il suit le réglage de l'appareil (le soir, sur tablette).
+     Seuls les jetons changent ; les trois couleurs de niveau s'éclaircissent
+     pour rester lisibles sur le fond sombre, et le texte posé SUR elles
+     (boutons, pastilles) passe au foncé. */
+  @media (prefers-color-scheme:dark){
+    :root{
+      --papier:#17140f; --papier-fonce:#2a251d; --carte:#211d17;
+      --encre:#f1eadb; --encre-douce:#b4a993;
+      --trait:rgba(241,234,219,.12); --trait-fort:rgba(241,234,219,.24);
+      --seconde:#5cc4a8; --premiere:#e3a24c; --terminale:#ef8468;
+      --barre:rgba(23,20,15,.86); --point:rgba(241,234,219,.045);
+      --ombre:rgba(0,0,0,.7); --sur-couleur:#17140f;
+    }
+  }
+  /* Du portail aux exercices interactifs (même origine), les deux pages se
+     fondent l'une dans l'autre ; un navigateur qui ne le connaît pas change
+     de page comme avant. */
+  @view-transition{navigation:auto}
+  @media (prefers-reduced-motion:reduce){
+    @view-transition{navigation:none}
+    *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
+    html{scroll-behavior:auto}
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{font-family:var(--sans);color:var(--encre);background:var(--papier);line-height:1.6;-webkit-font-smoothing:antialiased;
-    background-image:radial-gradient(circle at 1px 1px, rgba(34,29,21,.035) 1px, transparent 0);background-size:22px 22px;min-height:100vh;}
+    background-image:radial-gradient(circle at 1px 1px, var(--point) 1px, transparent 0);background-size:22px 22px;min-height:100vh;}
 
   /* Barre du haut */
-  .topbar{display:flex;align-items:center;gap:.6rem;padding:1rem 1.5rem;border-bottom:1px solid var(--trait);position:sticky;top:0;background:rgba(244,238,225,.86);backdrop-filter:blur(10px);z-index:30;}
+  .topbar{display:flex;align-items:center;gap:.6rem;padding:1rem 1.5rem;border-bottom:1px solid var(--trait);position:sticky;top:0;background:var(--barre);backdrop-filter:blur(10px);z-index:30;}
   .topbar a.brand{font-family:var(--serif);font-weight:600;font-size:1.05rem;color:var(--encre);text-decoration:none;letter-spacing:-.01em;display:flex;align-items:baseline;gap:.5rem;}
   .topbar .brand small{font-family:var(--sans);font-weight:400;font-size:.78rem;color:var(--encre-douce);}
 
@@ -45,7 +76,7 @@
 
   .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:1.4rem}
   .level-card{position:relative;background:var(--carte);border:1px solid var(--trait);border-top:5px solid var(--c);border-radius:16px;padding:2rem 1.5rem 1.6rem;text-align:left;cursor:pointer;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease;display:flex;flex-direction:column;min-height:170px;}
-  .level-card:hover{transform:translateY(-5px);box-shadow:0 16px 34px -18px rgba(34,29,21,.45)}
+  .level-card:hover{transform:translateY(-5px);box-shadow:0 16px 34px -18px var(--ombre)}
   .level-card .lname{font-family:var(--serif);font-weight:600;font-size:1.85rem;color:var(--c);letter-spacing:-.01em}
   .level-card .meta{color:var(--encre-douce);font-size:.86rem;margin-top:.3rem}
   .level-card .go{margin-top:auto;padding-top:1rem;font-size:.9rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
@@ -63,7 +94,7 @@
   /* Deux portes */
   .doors{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem}
   .door{background:var(--carte);border:1px solid var(--trait);border-radius:16px;padding:1.7rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.55rem;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;min-height:200px}
-  .door:hover{transform:translateY(-5px);box-shadow:0 16px 34px -18px rgba(34,29,21,.45)}
+  .door:hover{transform:translateY(-5px);box-shadow:0 16px 34px -18px var(--ombre)}
   .door .ic{width:2.6rem;height:2.6rem;border-radius:11px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);margin-bottom:.3rem}
   .door .ic svg{width:1.4rem;height:1.4rem}
   .door h3{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
@@ -77,11 +108,11 @@
   /* Liste des fiches */
   .search{position:relative;max-width:420px;margin-bottom:2rem}
   .search input{width:100%;font-family:var(--sans);font-size:.95rem;padding:.62rem .9rem .62rem 2.4rem;border:1px solid var(--trait-fort);border-radius:999px;background:var(--carte);color:var(--encre)}
-  .search input:focus{outline:none;border-color:var(--encre);box-shadow:0 0 0 3px rgba(34,29,21,.07)}
+  .search input:focus{outline:none;border-color:var(--encre);box-shadow:0 0 0 3px var(--trait)}
   .search svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:1.05rem;height:1.05rem;color:var(--encre-douce)}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.05rem}
   .card{background:var(--carte);border:1px solid var(--trait);border-top:4px solid var(--c);border-radius:14px;padding:1.2rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
-  .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px -16px rgba(34,29,21,.4)}
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px -16px var(--ombre)}
   .tag{align-self:flex-start;font-size:.75rem;font-weight:600;padding:.22rem .6rem;border-radius:999px;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
   .card h4{font-family:var(--serif);font-weight:600;font-size:1.18rem;line-height:1.2;letter-spacing:-.01em}
   .card .open{margin-top:auto;padding-top:.4rem;font-size:.85rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
@@ -100,7 +131,7 @@
   .dm-home{margin-bottom:1.6rem}
   .dm-home-inner{background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--c, var(--terminale));border-radius:16px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
   .dm-home-head{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.3rem}
-  .dm-home-badge{font-family:var(--sans);font-weight:600;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--c, var(--terminale));padding:.3rem .7rem;border-radius:999px;white-space:nowrap}
+  .dm-home-badge{font-family:var(--sans);font-weight:600;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sur-couleur);background:var(--c, var(--terminale));padding:.3rem .7rem;border-radius:999px;white-space:nowrap}
   .dm-home-title{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
   .dm-home-cours{color:var(--encre-douce);font-size:.95rem;line-height:1.55;margin:.7rem 0 .2rem}
   .dm-home-list{list-style:none;margin:.85rem 0 .3rem;display:grid;gap:.5rem}
@@ -108,12 +139,12 @@
   .dm-home-ex{font-family:var(--serif);font-weight:600;font-size:1.02rem;color:var(--encre)}
   .dm-home-modes{font-size:.82rem;color:var(--encre-douce);font-weight:500}
   .dm-home-note{font-size:.83rem;color:var(--encre-douce);margin:.75rem 0 1rem}
-  .dm-home-btn{display:inline-flex;align-items:center;gap:.45rem;background:var(--c, var(--terminale));color:#fff;text-decoration:none;font-weight:600;font-size:.95rem;padding:.7rem 1.3rem;border-radius:999px;transition:transform .15s ease,box-shadow .2s ease}
-  .dm-home-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(34,29,21,.45)}
+  .dm-home-btn{display:inline-flex;align-items:center;gap:.45rem;background:var(--c, var(--terminale));color:var(--sur-couleur);text-decoration:none;font-weight:600;font-size:.95rem;padding:.7rem 1.3rem;border-radius:999px;transition:transform .15s ease,box-shadow .2s ease}
+  .dm-home-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px var(--ombre)}
   .dm-home-btn svg{width:.95rem;height:.95rem}
   /* Bannière + liste des devoirs */
   .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--c, var(--terminale));border-radius:16px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
-  .dm-banner:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px rgba(34,29,21,.4)}
+  .dm-banner:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px var(--ombre)}
   .dm-banner-ic{font-size:1.5rem;line-height:1}
   .dm-banner-txt{display:flex;flex-direction:column;min-width:0}
   .dm-banner-txt strong{font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--c, var(--terminale));letter-spacing:-.01em}
@@ -575,8 +606,19 @@ const DM_CFG = {
   }
 };
 const _dmClients = {};
-function dmClient(url, key){
+/* supabase-js arrive en « defer » : il peut manquer encore quand fiches.json
+   répond. On l'attend (au plus 10 s) ; s'il ne vient pas, les devoirs et les
+   cours déposés se taisent, et les fiches du dépôt restent affichées. */
+const supabasePret = new Promise(fini => {
+  if(window.supabase) return fini();
+  const el = document.getElementById("supabase-js");
+  if(!el) return fini();
+  el.addEventListener("load", fini); el.addEventListener("error", fini);
+  setTimeout(fini, 10000);
+});
+async function dmClient(url, key){
   if(_dmClients[url]) return _dmClients[url];
+  await supabasePret;
   if(!window.supabase || !window.supabase.createClient) return null;
   try{ _dmClients[url] = window.supabase.createClient(url, key); }
   catch(e){ _dmClients[url] = null; }
@@ -600,7 +642,7 @@ async function chargerDevoirsListe(n){
   const conf = DM_CFG[n.key];
   const lien = (CONFIG.exercicesInteractifs[n.nom] || "").trim();
   if(!conf){ host.innerHTML = `<p class="state">Aucun devoir en cours pour l'instant.</p>`; return; }
-  const sb = dmClient(conf.url, conf.key);
+  const sb = await dmClient(conf.url, conf.key);
   if(!sb){ host.innerHTML = `<p class="state">Impossible de charger les devoirs pour le moment.</p>`; return; }
   try{
     const { data, error } = await sb.from(conf.table).select("valeurs").eq("id",1).single();
@@ -704,7 +746,7 @@ function lienPublicCours(url, chemin){
 async function coursDuNiveau(n){
   const conf = DM_CFG[n.key];
   if(!conf) return [];
-  const sb = dmClient(conf.url, conf.key);
+  const sb = await dmClient(conf.url, conf.key);
   if(!sb) return [];
   try{
     const { data, error } = await sb.from(conf.table).select("valeurs").eq("id",1).single();
