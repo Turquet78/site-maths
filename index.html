@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://turquet78.github.io/site-maths/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Kalam:wght@400;700&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- supabase-js ne sert ici qu'aux devoirs et aux cours déposés, lus APRÈS
      l'affichage : chargé en « defer », il ne retarde plus l'apparition de la
      page, et dmClient() l'attend. Version EXACTE : servie immuable par le CDN,
@@ -21,28 +21,16 @@
 <script id="supabase-js" defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3"></script>
 <style>
   :root{
-    --papier:#f4eee1; --papier-fonce:#ece3d1; --carte:#fffdf7;
-    --encre:#221d15; --encre-douce:#6a6052;
-    --trait:rgba(34,29,21,.12); --trait-fort:rgba(34,29,21,.22);
-    --seconde:#1f6f5c; --premiere:#94590d; --terminale:#9c3320;
+    /* Ardoise bleu nuit : un seul thème, de jour comme de nuit. */
+    --papier:#1e2a40; --papier-fonce:#263552; --carte:#0f1a2e;
+    --encre:#eef1f6; --encre-douce:#b3bfd3;
+    --trait:rgba(238,241,246,.16); --trait-fort:#c9d6ea;
+    --seconde:#8fd3bd; --premiere:#ffd166; --terminale:#f6a28b;
+    --craie:'Kalam',cursive;
     --serif:'Fraunces',Georgia,serif; --sans:'Spline Sans',-apple-system,sans-serif;
-    --barre:rgba(244,238,225,.86); --point:rgba(34,29,21,.035);
-    --ombre:rgba(34,29,21,.45); --sur-couleur:#fff;
-    color-scheme:light dark;
-  }
-  /* Mode sombre : il suit le réglage de l'appareil (le soir, sur tablette).
-     Seuls les jetons changent ; les trois couleurs de niveau s'éclaircissent
-     pour rester lisibles sur le fond sombre, et le texte posé SUR elles
-     (boutons, pastilles) passe au foncé. */
-  @media (prefers-color-scheme:dark){
-    :root{
-      --papier:#17140f; --papier-fonce:#2a251d; --carte:#211d17;
-      --encre:#f1eadb; --encre-douce:#b4a993;
-      --trait:rgba(241,234,219,.12); --trait-fort:rgba(241,234,219,.24);
-      --seconde:#5cc4a8; --premiere:#e3a24c; --terminale:#ef8468;
-      --barre:rgba(23,20,15,.86); --point:rgba(241,234,219,.045);
-      --ombre:rgba(0,0,0,.7); --sur-couleur:#17140f;
-    }
+    --barre:rgba(30,42,64,.86);
+    --ombre:rgba(0,0,0,.6); --sur-couleur:#0f1a2e;
+    color-scheme:dark;
   }
   /* Du portail aux exercices interactifs (même origine), les deux pages se
      fondent l'une dans l'autre ; un navigateur qui ne le connaît pas change
@@ -55,31 +43,45 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:var(--sans);color:var(--encre);background:var(--papier);line-height:1.6;-webkit-font-smoothing:antialiased;
-    background-image:radial-gradient(circle at 1px 1px, var(--point) 1px, transparent 0);background-size:22px 22px;min-height:100vh;}
+  body{font-family:var(--sans);color:var(--encre);background-color:var(--papier);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;
+    background-image:
+      linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px),
+      repeating-linear-gradient(115deg, rgba(255,255,255,0) 0px, rgba(255,255,255,.05) 90px, rgba(255,255,255,0) 180px, rgba(0,0,0,.08) 260px, rgba(255,255,255,0) 340px),
+      radial-gradient(ellipse 60% 70% at 15% 20%, rgba(80,140,230,.22), transparent 70%),
+      radial-gradient(ellipse 55% 60% at 85% 85%, rgba(120,90,200,.14), transparent 70%),
+      radial-gradient(ellipse 40% 40% at 70% 30%, rgba(255,255,255,.05), transparent 70%),
+      linear-gradient(135deg, rgba(255,255,255,.04), transparent 50%, rgba(0,0,0,.18));
+    background-size:36px 36px, 36px 36px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    background-attachment:fixed;}
 
   /* Barre du haut */
   .topbar{display:flex;align-items:center;gap:.6rem;padding:1rem 1.5rem;border-bottom:1px solid var(--trait);position:sticky;top:0;background:var(--barre);backdrop-filter:blur(10px);z-index:30;}
-  .topbar a.brand{font-family:var(--serif);font-weight:600;font-size:1.05rem;color:var(--encre);text-decoration:none;letter-spacing:-.01em;display:flex;align-items:baseline;gap:.5rem;}
+  .topbar a.brand{font-family:var(--craie);font-weight:700;font-size:1.3rem;color:var(--encre);text-decoration:none;letter-spacing:-.01em;display:flex;align-items:baseline;gap:.5rem;}
   .topbar .brand small{font-family:var(--sans);font-weight:400;font-size:.78rem;color:var(--encre-douce);}
 
   main{max-width:1000px;margin:0 auto;padding:2.5rem 1.5rem 5rem}
   .view{animation:rise .45s ease both}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-  /* Accueil */
-  .hero{text-align:center;padding:2.5rem 0 2.8rem}
+  /* Accueil : titre et niveaux à gauche, figures à la craie à droite */
+  .accueil{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:2.5rem;align-items:start;padding-top:1.5rem}
+  .hero{padding:1rem 0 1.5rem}
   .eyebrow{font-size:.76rem;letter-spacing:.28em;text-transform:uppercase;color:var(--encre-douce);margin-bottom:1rem}
-  .hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(2.4rem,6.5vw,4.2rem);line-height:1;letter-spacing:-.02em}
-  .hero .sub{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(1.3rem,3.5vw,1.9rem);color:var(--terminale);margin-top:.3rem}
-  .prompt{margin-top:2.3rem;color:var(--encre-douce);font-size:1rem;letter-spacing:.02em}
+  .hero h1{font-family:var(--craie);font-weight:700;font-size:clamp(2.4rem,5.5vw,3.8rem);line-height:1.05;color:#fff}
+  .hero .sub{font-size:1.1rem;line-height:1.55;color:var(--encre-douce);margin-top:.9rem;max-width:34rem}
+  .prompt{margin-top:1.6rem;color:var(--encre-douce);font-size:.95rem;letter-spacing:.02em}
+  .figures{display:flex;justify-content:flex-end;padding-top:.5rem}
+  .figures svg{width:100%;max-width:520px;height:auto;overflow:visible}
+  .figures text{font-family:var(--craie)}
 
-  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin-top:1.4rem}
-  .level-card{position:relative;background:var(--carte);border:1px solid var(--trait);border-top:5px solid var(--c);border-radius:16px;padding:2rem 1.5rem 1.6rem;text-align:left;cursor:pointer;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease;display:flex;flex-direction:column;min-height:170px;}
-  .level-card:hover{transform:translateY(-5px);box-shadow:0 16px 34px -18px var(--ombre)}
-  .level-card .lname{font-family:var(--serif);font-weight:600;font-size:1.85rem;color:var(--c);letter-spacing:-.01em}
-  .level-card .meta{color:var(--encre-douce);font-size:.86rem;margin-top:.3rem}
-  .level-card .go{margin-top:auto;padding-top:1rem;font-size:.9rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
+  .levels{display:flex;flex-direction:column;gap:1.1rem;margin-top:.5rem;max-width:34rem}
+  .level-card{position:relative;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:inherit;display:flex;align-items:center;gap:1rem;transition:transform .15s ease,box-shadow .15s ease;min-height:0;}
+  .level-card:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c)}
+  .level-card .sym{font-family:var(--craie);font-size:1.9rem;line-height:1;color:var(--c);width:3.4rem;flex:none}
+  .level-card .lname{font-family:var(--sans);font-weight:600;font-size:1.2rem;color:#fff;flex:1}
+  .level-card .meta{color:var(--encre-douce);font-size:.86rem;white-space:nowrap}
+  .level-card .go{font-size:.9rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
   .level-card .go svg{width:.95rem;height:.95rem;transition:transform .2s}
   .level-card:hover .go svg{transform:translateX(4px)}
 
@@ -88,16 +90,16 @@
   .back:hover{color:var(--encre)}
   .back svg{width:.9rem;height:.9rem}
 
-  .level-title{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,5vw,2.8rem);letter-spacing:-.01em;color:var(--c);margin-bottom:.4rem}
+  .level-title{font-family:var(--craie);font-weight:700;font-size:clamp(2rem,5vw,2.8rem);letter-spacing:-.01em;color:var(--c);margin-bottom:.4rem}
   .level-intro{color:var(--encre-douce);margin-bottom:2rem}
 
   /* Deux portes */
   .doors{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem}
-  .door{background:var(--carte);border:1px solid var(--trait);border-radius:16px;padding:1.7rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.55rem;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;min-height:200px}
-  .door:hover{transform:translateY(-5px);box-shadow:0 16px 34px -18px var(--ombre)}
+  .door{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c);border-radius:10px;padding:1.7rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.55rem;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;min-height:200px}
+  .door:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c)}
   .door .ic{width:2.6rem;height:2.6rem;border-radius:11px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);margin-bottom:.3rem}
   .door .ic svg{width:1.4rem;height:1.4rem}
-  .door h3{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
+  .door h3{font-family:var(--craie);font-weight:700;font-size:1.4rem;letter-spacing:-.01em}
   .door p{color:var(--encre-douce);font-size:.93rem;line-height:1.5}
   .door .cta{margin-top:auto;padding-top:.6rem;font-size:.9rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
   .door .cta svg{width:.95rem;height:.95rem;transition:transform .2s}
@@ -111,8 +113,8 @@
   .search input:focus{outline:none;border-color:var(--encre);box-shadow:0 0 0 3px var(--trait)}
   .search svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:1.05rem;height:1.05rem;color:var(--encre-douce)}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.05rem}
-  .card{background:var(--carte);border:1px solid var(--trait);border-top:4px solid var(--c);border-radius:14px;padding:1.2rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
-  .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px -16px var(--ombre)}
+  .card{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:5px 5px 0 var(--c);border-radius:10px;padding:1.2rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--c)}
   .tag{align-self:flex-start;font-size:.75rem;font-weight:600;padding:.22rem .6rem;border-radius:999px;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
   .card h4{font-family:var(--serif);font-weight:600;font-size:1.18rem;line-height:1.2;letter-spacing:-.01em}
   .card .open{margin-top:auto;padding-top:.4rem;font-size:.85rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
@@ -122,14 +124,20 @@
 
   footer{text-align:center;padding:2.5rem 1.5rem;border-top:1px solid var(--trait);color:var(--encre-douce);font-size:.84rem}
 
+  @media (max-width:900px){
+    .accueil{grid-template-columns:1fr}
+    .figures{justify-content:center;padding-top:0}
+    .figures svg{max-width:380px}
+  }
   @media (max-width:640px){
-    .levels{grid-template-columns:1fr}
     .doors{grid-template-columns:1fr}
+    .level-card{flex-wrap:wrap}
+    .level-card .meta{display:none}
   }
 
   /* Devoir à la maison (page niveau) */
   .dm-home{margin-bottom:1.6rem}
-  .dm-home-inner{background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--c, var(--terminale));border-radius:16px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
+  .dm-home-inner{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c, var(--terminale));border-radius:10px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
   .dm-home-head{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.3rem}
   .dm-home-badge{font-family:var(--sans);font-weight:600;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sur-couleur);background:var(--c, var(--terminale));padding:.3rem .7rem;border-radius:999px;white-space:nowrap}
   .dm-home-title{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
@@ -143,8 +151,8 @@
   .dm-home-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px var(--ombre)}
   .dm-home-btn svg{width:.95rem;height:.95rem}
   /* Bannière + liste des devoirs */
-  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:1px solid var(--trait);border-left:5px solid var(--c, var(--terminale));border-radius:16px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
-  .dm-banner:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px var(--ombre)}
+  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c, var(--terminale));border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .dm-banner:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c, var(--terminale))}
   .dm-banner-ic{font-size:1.5rem;line-height:1}
   .dm-banner-txt{display:flex;flex-direction:column;min-width:0}
   .dm-banner-txt strong{font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--c, var(--terminale));letter-spacing:-.01em}
@@ -187,9 +195,9 @@ const CONFIG = {
 /* ▲ Fin des réglages ▲ — le reste s'occupe de tout automatiquement. */
 
 const NIVEAUX = [
-  { key:"seconde",   nom:"Seconde",   couleur:"var(--seconde)" },
-  { key:"premiere",  nom:"Première",  couleur:"var(--premiere)" },
-  { key:"terminale", nom:"Terminale", couleur:"var(--terminale)" }
+  { key:"seconde",   nom:"Seconde",   couleur:"var(--seconde)",   symbole:"√x" },
+  { key:"premiere",  nom:"Première",  couleur:"var(--premiere)",  symbole:"f'(x)" },
+  { key:"terminale", nom:"Terminale", couleur:"var(--terminale)", symbole:"∫" }
 ];
 const parNom = Object.fromEntries(NIVEAUX.map(n=>[n.nom,n]));
 const parKey = Object.fromEntries(NIVEAUX.map(n=>[n.key,n]));
@@ -203,6 +211,29 @@ const search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strok
 
 let FICHES = [];
 
+/* Figures tracées « à la craie » sur l'accueil : cercle trigonométrique,
+   triangle rectangle et vecteur. Purement décoratif (aria-hidden). */
+const figures = `<svg viewBox="0 0 520 560" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="170" cy="150" r="110" fill="none" stroke="#eef1f6" stroke-opacity=".6" stroke-width="2"/>
+  <line x1="40" y1="150" x2="300" y2="150" stroke="#eef1f6" stroke-opacity=".45" stroke-width="1.5"/>
+  <line x1="170" y1="20" x2="170" y2="280" stroke="#eef1f6" stroke-opacity=".45" stroke-width="1.5"/>
+  <line x1="170" y1="150" x2="265" y2="95" stroke="#ffd166" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 210 150 A 40 40 0 0 0 204 130" fill="none" stroke="#ffd166" stroke-width="2"/>
+  <line x1="265" y1="95" x2="265" y2="150" stroke="#8fd3bd" stroke-width="2" stroke-dasharray="5 5"/>
+  <text x="222" y="146" font-size="22" fill="#ffd166">θ</text>
+  <text x="272" y="122" font-size="20" fill="#8fd3bd">sin θ</text>
+  <text x="200" y="172" font-size="20" fill="#eef1f6">cos θ</text>
+  <path d="M 60 520 L 300 520 L 300 360 Z" fill="none" stroke="#f6a28b" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 284 520 L 284 504 L 300 504" fill="none" stroke="#f6a28b" stroke-width="2"/>
+  <text x="170" y="548" font-size="22" fill="#eef1f6">b</text>
+  <text x="310" y="446" font-size="22" fill="#eef1f6">a</text>
+  <text x="150" y="430" font-size="22" fill="#f6a28b">c</text>
+  <text x="330" y="380" font-size="26" fill="#eef1f6" fill-opacity=".85">a² + b² = c²</text>
+  <line x1="360" y1="250" x2="480" y2="200" stroke="#8fd3bd" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 466 192 L 480 200 L 470 212" fill="none" stroke="#8fd3bd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="400" y="200" font-size="24" fill="#8fd3bd">u⃗</text>
+</svg>`;
+
 function compterFiches(nom){ return FICHES.filter(f=>f.niveau===nom).length; }
 
 /* ---------- Vues ---------- */
@@ -211,19 +242,25 @@ function vueAccueil(){
     const c = compterFiches(n.nom);
     const meta = c>0 ? `${c} fiche${c>1?'s':''}` : 'à venir';
     return `<a class="level-card" style="--c:${n.couleur}" href="#/${n.key}">
+      <span class="sym" aria-hidden="true">${n.symbole}</span>
       <span class="lname">${n.nom}</span>
       <span class="meta">${meta}</span>
-      <span class="go">Voir le niveau ${arrow}</span>
+      <span class="go">Voir ${arrow}</span>
     </a>`;
   }).join("");
   return `<section class="view">
-    <div class="hero">
-      <p class="eyebrow">Lycée · Mathématiques</p>
-      <h1>M. Turquet</h1>
-      <p class="sub">Mathématiques au lycée</p>
-      <p class="prompt">Choisis ton niveau pour commencer</p>
+    <div class="accueil">
+      <div>
+        <div class="hero">
+          <p class="eyebrow">Lycée · Mathématiques</p>
+          <h1>Cours, fiches et exercices</h1>
+          <p class="sub">Ressources mises à disposition gratuitement pour les élèves, de la Seconde à la Terminale.</p>
+          <p class="prompt">Choisis ton niveau pour commencer</p>
+        </div>
+        <div class="levels">${cards}</div>
+      </div>
+      <div class="figures" aria-hidden="true">${figures}</div>
     </div>
-    <div class="levels">${cards}</div>
     <section class="valeurs">
       <p class="eyebrow">Ma façon d'enseigner</p>
       <div class="valeurs-grid">
