@@ -64,6 +64,12 @@
   .view{animation:rise .45s ease both}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
+  /* Halo lumineux derrière les cadres, à la couleur du niveau */
+  .level-card,.door,.card,.dm-home-inner,.dm-banner{
+    --lum:var(--c, var(--terminale));
+    --halo:0 14px 34px -4px color-mix(in srgb, var(--lum) 55%, transparent),0 0 22px 0 color-mix(in srgb, var(--lum) 28%, transparent);
+    --halo-fort:0 18px 44px -2px color-mix(in srgb, var(--lum) 70%, transparent),0 0 30px 2px color-mix(in srgb, var(--lum) 38%, transparent);
+  }
   /* Accueil : titre et niveaux à gauche, figures à la craie à droite */
   .accueil{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:2.5rem;align-items:start;padding-top:1.5rem}
   .hero{padding:1rem 0 1.5rem}
@@ -76,8 +82,8 @@
   .figures text{font-family:var(--craie)}
 
   .levels{display:flex;flex-direction:column;gap:1.1rem;margin-top:.5rem;max-width:34rem}
-  .level-card{position:relative;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:inherit;display:flex;align-items:center;gap:1rem;transition:transform .15s ease,box-shadow .15s ease;min-height:0;}
-  .level-card:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c)}
+  .level-card{position:relative;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c),var(--halo);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:inherit;display:flex;align-items:center;gap:1rem;transition:transform .15s ease,box-shadow .15s ease;min-height:0;}
+  .level-card:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c),var(--halo-fort)}
   .level-card .sym{font-family:var(--craie);font-size:1.9rem;line-height:1;color:var(--c);width:3.4rem;flex:none}
   .level-card .lname{font-family:var(--sans);font-weight:600;font-size:1.2rem;color:#fff;flex:1}
   .level-card .meta{color:var(--encre-douce);font-size:.86rem;white-space:nowrap}
@@ -95,8 +101,8 @@
 
   /* Deux portes */
   .doors{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem}
-  .door{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c);border-radius:10px;padding:1.7rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.55rem;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;min-height:200px}
-  .door:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c)}
+  .door{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c),var(--halo);border-radius:10px;padding:1.7rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.55rem;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;min-height:200px}
+  .door:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c),var(--halo-fort)}
   .door .ic{width:2.6rem;height:2.6rem;border-radius:11px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);margin-bottom:.3rem}
   .door .ic svg{width:1.4rem;height:1.4rem}
   .door h3{font-family:var(--craie);font-weight:700;font-size:1.4rem;letter-spacing:-.01em}
@@ -113,8 +119,8 @@
   .search input:focus{outline:none;border-color:var(--encre);box-shadow:0 0 0 3px var(--trait)}
   .search svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:1.05rem;height:1.05rem;color:var(--encre-douce)}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.05rem}
-  .card{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:5px 5px 0 var(--c);border-radius:10px;padding:1.2rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
-  .card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--c)}
+  .card{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:5px 5px 0 var(--c),var(--halo);border-radius:10px;padding:1.2rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--c),var(--halo-fort)}
   .tag{align-self:flex-start;font-size:.75rem;font-weight:600;padding:.22rem .6rem;border-radius:999px;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
   .card h4{font-family:var(--serif);font-weight:600;font-size:1.18rem;line-height:1.2;letter-spacing:-.01em}
   .card .open{margin-top:auto;padding-top:.4rem;font-size:.85rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
@@ -137,7 +143,7 @@
 
   /* Devoir à la maison (page niveau) */
   .dm-home{margin-bottom:1.6rem}
-  .dm-home-inner{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c, var(--terminale));border-radius:10px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
+  .dm-home-inner{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c, var(--terminale)),var(--halo);border-radius:10px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
   .dm-home-head{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.3rem}
   .dm-home-badge{font-family:var(--sans);font-weight:600;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sur-couleur);background:var(--c, var(--terminale));padding:.3rem .7rem;border-radius:999px;white-space:nowrap}
   .dm-home-title{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
@@ -151,8 +157,8 @@
   .dm-home-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px var(--ombre)}
   .dm-home-btn svg{width:.95rem;height:.95rem}
   /* Bannière + liste des devoirs */
-  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c, var(--terminale));border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
-  .dm-banner:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c, var(--terminale))}
+  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--c, var(--terminale)),var(--halo);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .dm-banner:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--c, var(--terminale)),var(--halo-fort)}
   .dm-banner-ic{font-size:1.5rem;line-height:1}
   .dm-banner-txt{display:flex;flex-direction:column;min-width:0}
   .dm-banner-txt strong{font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--c, var(--terminale));letter-spacing:-.01em}
