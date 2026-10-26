@@ -64,11 +64,12 @@
   .view{animation:rise .45s ease both}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-  /* Halo lumineux derrière les cadres, à la couleur du niveau */
+  /* Halo lumineux derrière les cadres, à la couleur du niveau — adoucie :
+     la teinte est fondue dans le bleu de l'ardoise, et le halo plus léger. */
   .level-card,.door,.card,.dm-home-inner,.dm-banner{
-    --lum:var(--c, var(--terminale));
-    --halo:0 14px 34px -4px color-mix(in srgb, var(--lum) 55%, transparent),0 0 22px 0 color-mix(in srgb, var(--lum) 28%, transparent);
-    --halo-fort:0 18px 44px -2px color-mix(in srgb, var(--lum) 70%, transparent),0 0 30px 2px color-mix(in srgb, var(--lum) 38%, transparent);
+    --lum:color-mix(in srgb, var(--c, var(--terminale)) 55%, var(--papier));
+    --halo:0 14px 34px -4px color-mix(in srgb, var(--lum) 35%, transparent),0 0 22px 0 color-mix(in srgb, var(--lum) 16%, transparent);
+    --halo-fort:0 18px 44px -2px color-mix(in srgb, var(--lum) 48%, transparent),0 0 30px 2px color-mix(in srgb, var(--lum) 24%, transparent);
   }
   /* Accueil : titre et niveaux à gauche, figures à la craie à droite */
   .accueil{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:2.5rem;align-items:start;padding-top:1.5rem}
