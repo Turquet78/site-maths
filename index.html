@@ -21,17 +21,18 @@
 <script id="supabase-js" defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3"></script>
 <style>
   :root{
-    /* Ardoise bleue : un seul thème, de jour comme de nuit. Éclaircie
-       (octobre 2026) : fond, cadres et barre du haut dans la même proportion. */
-    --papier:#384c72; --papier-fonce:#42577f; --carte:#233456;
-    --encre:#eef1f6; --encre-douce:#b3bfd3;
-    --trait:rgba(238,241,246,.16); --trait-fort:#c9d6ea;
-    --seconde:#8fd3bd; --premiere:#ffd166; --terminale:#f6a28b;
+    /* Bleu ciel, écriture foncée : un seul thème, de jour comme de nuit
+       (octobre 2026 ; avant, une ardoise bleu nuit écrite en blanc). Les
+       couleurs des niveaux sont foncées pour se lire sur le fond clair. */
+    --papier:#e6edf8; --papier-fonce:#d5e0f1; --carte:#ffffff;
+    --encre:#1e2a4a; --encre-douce:#4f5b78;
+    --trait:rgba(30,42,74,.14); --trait-fort:#1e2a4a;
+    --seconde:#1b7d62; --premiere:#a8680c; --terminale:#c0482c;
     --craie:'Kalam',cursive;
     --serif:'Fraunces',Georgia,serif; --sans:'Spline Sans',-apple-system,sans-serif;
-    --barre:rgba(56,76,114,.86);
-    --ombre:rgba(0,0,0,.6); --sur-couleur:#0f1a2e;
-    color-scheme:dark;
+    --barre:rgba(230,237,248,.88);
+    --ombre:rgba(30,42,74,.35); --sur-couleur:#ffffff;
+    color-scheme:light;
   }
   /* Du portail aux exercices interactifs (même origine), les deux pages se
      fondent l'une dans l'autre ; un navigateur qui ne le connaît pas change
@@ -46,14 +47,11 @@
   html{scroll-behavior:smooth}
   body{font-family:var(--sans);color:var(--encre);background-color:var(--papier);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;
     background-image:
-      linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px),
-      repeating-linear-gradient(115deg, rgba(255,255,255,0) 0px, rgba(255,255,255,.05) 90px, rgba(255,255,255,0) 180px, rgba(0,0,0,.08) 260px, rgba(255,255,255,0) 340px),
-      radial-gradient(ellipse 60% 70% at 15% 20%, rgba(80,140,230,.22), transparent 70%),
-      radial-gradient(ellipse 55% 60% at 85% 85%, rgba(120,90,200,.14), transparent 70%),
-      radial-gradient(ellipse 40% 40% at 70% 30%, rgba(255,255,255,.05), transparent 70%),
-      linear-gradient(135deg, rgba(255,255,255,.04), transparent 50%, rgba(0,0,0,.18));
-    background-size:36px 36px, 36px 36px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+      linear-gradient(rgba(30,60,120,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30,60,120,.08) 1px, transparent 1px),
+      radial-gradient(ellipse 60% 70% at 15% 20%, rgba(80,140,230,.18), transparent 70%),
+      radial-gradient(ellipse 55% 60% at 85% 85%, rgba(120,90,200,.10), transparent 70%);
+    background-size:36px 36px, 36px 36px, 100% 100%, 100% 100%;
     background-attachment:fixed;}
 
   /* Barre du haut */
@@ -78,7 +76,7 @@
   .accueil{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:2.5rem;align-items:start;padding-top:1.5rem}
   .hero{padding:1rem 0 1.5rem}
   .eyebrow{font-size:.76rem;letter-spacing:.28em;text-transform:uppercase;color:var(--encre-douce);margin-bottom:1rem}
-  .hero h1{font-family:var(--craie);font-weight:700;font-size:clamp(2.4rem,5.5vw,3.8rem);line-height:1.05;color:#fff}
+  .hero h1{font-family:var(--craie);font-weight:700;font-size:clamp(2.4rem,5.5vw,3.8rem);line-height:1.05;color:var(--encre)}
   .hero .sub{font-size:1.1rem;line-height:1.55;color:var(--encre-douce);margin-top:.9rem;max-width:34rem}
   .prompt{margin-top:1.6rem;color:var(--encre-douce);font-size:.95rem;letter-spacing:.02em}
   .figures{display:flex;justify-content:flex-end;padding-top:.5rem}
@@ -89,7 +87,7 @@
   .level-card{position:relative;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--bande),var(--halo);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:inherit;display:flex;align-items:center;gap:1rem;transition:transform .15s ease,box-shadow .15s ease;min-height:0;}
   .level-card:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--bande),var(--halo-fort)}
   .level-card .sym{font-family:var(--craie);font-size:1.9rem;line-height:1;color:var(--c);width:3.4rem;flex:none}
-  .level-card .lname{font-family:var(--sans);font-weight:600;font-size:1.2rem;color:#fff;flex:1}
+  .level-card .lname{font-family:var(--sans);font-weight:600;font-size:1.2rem;color:var(--encre);flex:1}
   .level-card .meta{color:var(--encre-douce);font-size:.86rem;white-space:nowrap}
   .level-card .go{font-size:.9rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
   .level-card .go svg{width:.95rem;height:.95rem;transition:transform .2s}
@@ -224,24 +222,24 @@ let FICHES = [];
 /* Figures tracées « à la craie » sur l'accueil : cercle trigonométrique,
    triangle rectangle et vecteur. Purement décoratif (aria-hidden). */
 const figures = `<svg viewBox="0 0 520 560" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="170" cy="150" r="110" fill="none" stroke="#eef1f6" stroke-opacity=".6" stroke-width="2"/>
-  <line x1="40" y1="150" x2="300" y2="150" stroke="#eef1f6" stroke-opacity=".45" stroke-width="1.5"/>
-  <line x1="170" y1="20" x2="170" y2="280" stroke="#eef1f6" stroke-opacity=".45" stroke-width="1.5"/>
-  <line x1="170" y1="150" x2="265" y2="95" stroke="#ffd166" stroke-width="3" stroke-linecap="round"/>
-  <path d="M 210 150 A 40 40 0 0 0 204 130" fill="none" stroke="#ffd166" stroke-width="2"/>
-  <line x1="265" y1="95" x2="265" y2="150" stroke="#8fd3bd" stroke-width="2" stroke-dasharray="5 5"/>
-  <text x="222" y="146" font-size="22" fill="#ffd166">θ</text>
-  <text x="272" y="122" font-size="20" fill="#8fd3bd">sin θ</text>
-  <text x="200" y="172" font-size="20" fill="#eef1f6">cos θ</text>
-  <path d="M 60 520 L 300 520 L 300 360 Z" fill="none" stroke="#f6a28b" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M 284 520 L 284 504 L 300 504" fill="none" stroke="#f6a28b" stroke-width="2"/>
-  <text x="170" y="548" font-size="22" fill="#eef1f6">b</text>
-  <text x="310" y="446" font-size="22" fill="#eef1f6">a</text>
-  <text x="150" y="430" font-size="22" fill="#f6a28b">c</text>
-  <text x="330" y="380" font-size="26" fill="#eef1f6" fill-opacity=".85">a² + b² = c²</text>
-  <line x1="360" y1="250" x2="480" y2="200" stroke="#8fd3bd" stroke-width="3" stroke-linecap="round"/>
-  <path d="M 466 192 L 480 200 L 470 212" fill="none" stroke="#8fd3bd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="400" y="200" font-size="24" fill="#8fd3bd">u⃗</text>
+  <circle cx="170" cy="150" r="110" fill="none" stroke="#1e2a4a" stroke-opacity=".6" stroke-width="2"/>
+  <line x1="40" y1="150" x2="300" y2="150" stroke="#1e2a4a" stroke-opacity=".45" stroke-width="1.5"/>
+  <line x1="170" y1="20" x2="170" y2="280" stroke="#1e2a4a" stroke-opacity=".45" stroke-width="1.5"/>
+  <line x1="170" y1="150" x2="265" y2="95" stroke="#a8680c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 210 150 A 40 40 0 0 0 204 130" fill="none" stroke="#a8680c" stroke-width="2"/>
+  <line x1="265" y1="95" x2="265" y2="150" stroke="#1b7d62" stroke-width="2" stroke-dasharray="5 5"/>
+  <text x="222" y="146" font-size="22" fill="#a8680c">θ</text>
+  <text x="272" y="122" font-size="20" fill="#1b7d62">sin θ</text>
+  <text x="200" y="172" font-size="20" fill="#1e2a4a">cos θ</text>
+  <path d="M 60 520 L 300 520 L 300 360 Z" fill="none" stroke="#c0482c" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 284 520 L 284 504 L 300 504" fill="none" stroke="#c0482c" stroke-width="2"/>
+  <text x="170" y="548" font-size="22" fill="#1e2a4a">b</text>
+  <text x="310" y="446" font-size="22" fill="#1e2a4a">a</text>
+  <text x="150" y="430" font-size="22" fill="#c0482c">c</text>
+  <text x="330" y="380" font-size="26" fill="#1e2a4a" fill-opacity=".85">a² + b² = c²</text>
+  <line x1="360" y1="250" x2="480" y2="200" stroke="#1b7d62" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 466 192 L 480 200 L 470 212" fill="none" stroke="#1b7d62" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="400" y="200" font-size="24" fill="#1b7d62">u⃗</text>
 </svg>`;
 
 function compterFiches(nom){ return FICHES.filter(f=>f.niveau===nom).length; }
