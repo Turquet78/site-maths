@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://turquet78.github.io/site-maths/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Kalam:wght@400;700&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
 <!-- supabase-js ne sert ici qu'aux devoirs et aux cours déposés, lus APRÈS
      l'affichage : chargé en « defer », il ne retarde plus l'apparition de la
      page, et dmClient() l'attend. Version EXACTE : servie immuable par le CDN,
@@ -21,17 +21,23 @@
 <script id="supabase-js" defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3"></script>
 <style>
   :root{
-    /* Papier beige, écriture foncée : un seul thème, de jour comme de nuit
-       (octobre 2026 ; avant, une ardoise bleu nuit écrite en blanc, puis un
-       bleu ciel). Les couleurs des niveaux sont foncées pour se lire sur le
-       fond clair ; les cadres sont d'un beige plus soutenu que le fond. */
-    --papier:#f5f0e6; --papier-fonce:#e6dcc8; --carte:#f3e9d6;
+    /* Le papier des exercices interactifs, écriture foncée : un seul thème,
+       de jour comme de nuit (octobre 2026 ; avant, une ardoise bleu nuit
+       écrite en blanc, puis un bleu ciel, puis un beige). Le papier et les
+       carreaux sont ceux des exercices (--paper, --grid, 28 px) : passer du
+       portail aux exercices ne change pas de cahier. Les couleurs des niveaux
+       sont foncées pour se lire sur le clair ; les cadres sont d'un beige
+       transparent, les carreaux se voient au travers. */
+    --papier:#f7f6f1; --papier-fonce:#e6dcc8; --carte:rgba(243,233,214,.45);
+    --carreau:#cbd8ec;
     --encre:#1e2a4a; --encre-douce:#4f5b78;
     --trait:rgba(30,42,74,.14); --trait-fort:#1e2a4a;
-    --seconde:#1b7d62; --premiere:#a8680c; --terminale:#c0482c;
+    --seconde:#1b7d62; --premiere:#2b50c8; --terminale:#c0482c;
     --craie:'Kalam',cursive;
-    --serif:'Fraunces',Georgia,serif; --sans:'Spline Sans',-apple-system,sans-serif;
-    --barre:rgba(245,240,230,.9);
+    /* Titres au feutre (Kalam), texte en écriture d'élève ronde et appliquée
+       (Patrick Hand, une seule graisse : le gras est épaissi par le navigateur). */
+    --serif:'Patrick Hand',cursive; --sans:'Patrick Hand',cursive;
+    --barre:rgba(247,246,241,.9);
     --ombre:rgba(30,42,74,.35); --sur-couleur:#ffffff;
     color-scheme:light;
   }
@@ -46,13 +52,11 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:var(--sans);color:var(--encre);background-color:var(--papier);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;
+  body{font-family:var(--sans);font-size:1.14rem;color:var(--encre);background-color:var(--papier);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;
     background-image:
-      linear-gradient(rgba(120,95,60,.09) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(120,95,60,.09) 1px, transparent 1px),
-      radial-gradient(ellipse 60% 70% at 15% 20%, rgba(230,200,150,.25), transparent 70%),
-      radial-gradient(ellipse 55% 60% at 85% 85%, rgba(200,170,130,.15), transparent 70%);
-    background-size:36px 36px, 36px 36px, 100% 100%, 100% 100%;
+      linear-gradient(var(--carreau) 1px, transparent 1px),
+      linear-gradient(90deg, var(--carreau) 1px, transparent 1px);
+    background-size:28px 28px; background-position:-1px -1px;
     background-attachment:fixed;}
 
   /* Barre du haut */
@@ -64,15 +68,12 @@
   .view{animation:rise .45s ease both}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-  /* Halo lumineux derrière les cadres, à la couleur du niveau — adoucie :
-     la teinte est fondue dans le bleu de l'ardoise, et le halo plus léger. */
-  .level-card,.door,.card,.dm-home-inner,.dm-banner{
-    --lum:color-mix(in srgb, var(--c, var(--terminale)) 55%, var(--papier));
-    /* La bande franche décalée sous le cadre, adoucie elle aussi. */
-    --bande:color-mix(in srgb, var(--c, var(--terminale)) 65%, var(--papier));
-    --halo:0 14px 34px -4px color-mix(in srgb, var(--lum) 35%, transparent),0 0 22px 0 color-mix(in srgb, var(--lum) 16%, transparent);
-    --halo-fort:0 18px 44px -2px color-mix(in srgb, var(--lum) 48%, transparent),0 0 30px 2px color-mix(in srgb, var(--lum) 24%, transparent);
-  }
+  /* Les cadres sont tracés au MARQUEUR, à la couleur du niveau, par
+     tracerCadres() (fin du script) : quatre coups de gros marqueur à l'encre
+     translucide, qui dépassent aux coins. Ni bordure, ni ombre : le trait
+     seul fait le cadre. Le SVG du trait est posé dans le cadre (.marqueur). */
+  .level-card,.door,.card,.dm-home-inner,.dm-banner{position:relative}
+  .marqueur{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;mix-blend-mode:multiply}
   /* Accueil : titre et niveaux à gauche, figures à la craie à droite */
   .accueil{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:2.5rem;align-items:start;padding-top:1.5rem}
   .hero{padding:1rem 0 1.5rem}
@@ -85,10 +86,10 @@
   .figures text{font-family:var(--craie)}
 
   .levels{display:flex;flex-direction:column;gap:1.1rem;margin-top:.5rem;max-width:34rem}
-  .level-card{position:relative;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--bande),var(--halo);border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:inherit;display:flex;align-items:center;gap:1rem;transition:transform .15s ease,box-shadow .15s ease;min-height:0;}
-  .level-card:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--bande),var(--halo-fort)}
+  .level-card{position:relative;background:var(--carte);border:2px solid transparent;border-radius:10px;padding:1rem 1.25rem;text-decoration:none;color:inherit;display:flex;align-items:center;gap:1rem;transition:transform .15s ease,box-shadow .15s ease;min-height:0;}
+  .level-card:hover{transform:translate(-2px,-2px)}
   .level-card .sym{font-family:var(--craie);font-size:1.9rem;line-height:1;color:var(--c);width:3.4rem;flex:none}
-  .level-card .lname{font-family:var(--sans);font-weight:600;font-size:1.2rem;color:var(--encre);flex:1}
+  .level-card .lname{font-family:var(--sans);font-weight:600;font-size:1.32rem;color:var(--encre);flex:1}
   .level-card .meta{color:var(--encre-douce);font-size:.86rem;white-space:nowrap}
   .level-card .go{font-size:.9rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
   .level-card .go svg{width:.95rem;height:.95rem;transition:transform .2s}
@@ -104,8 +105,8 @@
 
   /* Deux portes */
   .doors{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem}
-  .door{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--bande),var(--halo);border-radius:10px;padding:1.7rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.55rem;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;min-height:200px}
-  .door:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--bande),var(--halo-fort)}
+  .door{background:var(--carte);border:2px solid transparent;border-radius:10px;padding:1.7rem 1.6rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.55rem;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;min-height:200px}
+  .door:hover{transform:translate(-2px,-2px)}
   .door .ic{width:2.6rem;height:2.6rem;border-radius:11px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);margin-bottom:.3rem}
   .door .ic svg{width:1.4rem;height:1.4rem}
   .door h3{font-family:var(--craie);font-weight:700;font-size:1.4rem;letter-spacing:-.01em}
@@ -122,8 +123,8 @@
   .search input:focus{outline:none;border-color:var(--encre);box-shadow:0 0 0 3px var(--trait)}
   .search svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:1.05rem;height:1.05rem;color:var(--encre-douce)}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.05rem}
-  .card{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:5px 5px 0 var(--bande),var(--halo);border-radius:10px;padding:1.2rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
-  .card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--bande),var(--halo-fort)}
+  .card{background:var(--carte);border:2px solid transparent;border-radius:10px;padding:1.2rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.5rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .card:hover{transform:translate(-2px,-2px)}
   .tag{align-self:flex-start;font-size:.75rem;font-weight:600;padding:.22rem .6rem;border-radius:999px;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
   .card h4{font-family:var(--serif);font-weight:600;font-size:1.18rem;line-height:1.2;letter-spacing:-.01em}
   .card .open{margin-top:auto;padding-top:.4rem;font-size:.85rem;font-weight:600;color:var(--c);display:inline-flex;align-items:center;gap:.4rem}
@@ -146,7 +147,7 @@
 
   /* Devoir à la maison (page niveau) */
   .dm-home{margin-bottom:1.6rem}
-  .dm-home-inner{background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--bande),var(--halo);border-radius:10px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
+  .dm-home-inner{background:var(--carte);border:2px solid transparent;border-radius:10px;padding:1.5rem 1.6rem;animation:rise .45s ease both}
   .dm-home-head{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.3rem}
   .dm-home-badge{font-family:var(--sans);font-weight:600;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sur-couleur);background:var(--c, var(--terminale));padding:.3rem .7rem;border-radius:999px;white-space:nowrap}
   .dm-home-title{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
@@ -160,8 +161,8 @@
   .dm-home-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px var(--ombre)}
   .dm-home-btn svg{width:.95rem;height:.95rem}
   /* Bannière + liste des devoirs */
-  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:2px solid var(--trait-fort);box-shadow:6px 6px 0 var(--bande),var(--halo);border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
-  .dm-banner:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--bande),var(--halo-fort)}
+  .dm-banner{display:flex;align-items:center;gap:1rem;background:var(--carte);border:2px solid transparent;border-radius:10px;padding:1.1rem 1.4rem;margin-bottom:1.4rem;text-decoration:none;color:inherit;transition:transform .2s ease,box-shadow .2s ease}
+  .dm-banner:hover{transform:translate(-2px,-2px)}
   .dm-banner-ic{font-size:1.5rem;line-height:1}
   .dm-banner-txt{display:flex;flex-direction:column;min-width:0}
   .dm-banner-txt strong{font-family:var(--serif);font-weight:600;font-size:1.15rem;color:var(--c, var(--terminale));letter-spacing:-.01em}
@@ -181,6 +182,12 @@
 <div class="topbar">
   <a class="brand" href="#/">M. Turquet <small>Mathématiques au lycée</small></a>
 </div>
+
+<!-- L'encre du marqueur : striée dans le sens du trait (horizontal, vertical). -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="encre-h" filterUnits="userSpaceOnUse" x="-60" y="-60" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.9" numOctaves="2" seed="5" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.15" result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/></filter>
+  <filter id="encre-v" filterUnits="userSpaceOnUse" x="-60" y="-60" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.9 0.02" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.15" result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/></filter>
+</svg>
 
 <main id="app"></main>
 
@@ -226,10 +233,10 @@ const figures = `<svg viewBox="0 0 520 560" xmlns="http://www.w3.org/2000/svg">
   <circle cx="170" cy="150" r="110" fill="none" stroke="#1e2a4a" stroke-width="2.2"/>
   <line x1="40" y1="150" x2="300" y2="150" stroke="#1e2a4a" stroke-opacity=".8" stroke-width="1.6"/>
   <line x1="170" y1="20" x2="170" y2="280" stroke="#1e2a4a" stroke-opacity=".8" stroke-width="1.6"/>
-  <line x1="170" y1="150" x2="265" y2="95" stroke="#7f4e06" stroke-width="3" stroke-linecap="round"/>
-  <path d="M 210 150 A 40 40 0 0 0 204 130" fill="none" stroke="#7f4e06" stroke-width="2"/>
+  <line x1="170" y1="150" x2="265" y2="95" stroke="#1e3ca0" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 210 150 A 40 40 0 0 0 204 130" fill="none" stroke="#1e3ca0" stroke-width="2"/>
   <line x1="265" y1="95" x2="265" y2="150" stroke="#125c48" stroke-width="2" stroke-dasharray="5 5"/>
-  <text x="222" y="146" font-size="22" fill="#7f4e06">θ</text>
+  <text x="222" y="146" font-size="22" fill="#1e3ca0">θ</text>
   <text x="272" y="122" font-size="20" fill="#125c48">sin θ</text>
   <text x="200" y="172" font-size="20" fill="#1e2a4a">cos θ</text>
   <path d="M 60 520 L 300 520 L 300 360 Z" fill="none" stroke="#9a3520" stroke-width="3" stroke-linejoin="round"/>
@@ -762,6 +769,84 @@ function router(){
 }
 
 window.addEventListener("hashchange", router);
+
+/* ---------- Cadres au marqueur ----------
+   Chaque cadre est tracé en quatre coups de marqueur, à la couleur de son
+   niveau (--c), qui ondulent à peine et se croisent aux coins de façons
+   variées (COINS, plus bas). Le tirage est SEMÉ par la taille du cadre : un
+   même cadre garde le même trait et les mêmes coins d'un affichage à
+   l'autre. Le tracé suit les changements de taille (fenêtre, téléphone
+   tourné) et les vues que le routeur redessine. */
+const CADRES = ".level-card,.door,.card,.dm-home-inner,.dm-banner";
+const MARQUEUR = { epaisseur:10, encre:.55, depasse:12 };
+function semer(g){ return ()=>{ g|=0; g=g+0x6D2B79F5|0; let t=Math.imul(g^g>>>15,1|g);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+/* Les quatre coins d'un cadre se croisent de quatre façons DIFFÉRENTES,
+   tirées parmi cinq : les deux traits se croisent, ils se touchent juste,
+   l'un s'arrête court, un seul dépasse (en T), ou le coin s'arrondit d'un
+   geste. Pour chaque coin : de combien le trait qui y ARRIVE et celui qui en
+   REPART le dépassent (négatif : il s'arrête avant). */
+const COINS = ["croise","touche","ouvert","te","arrondi"];
+function tracerCadre(el){
+  const w=el.offsetWidth, h=el.offsetHeight;
+  if(!w || !h) return;
+  const ancien = el.querySelector(":scope > .marqueur");
+  if(ancien && ancien.dataset.taille === w+"x"+h) return;
+  const coul = getComputedStyle(el).getPropertyValue("--c").trim()
+            || getComputedStyle(document.documentElement).getPropertyValue("--terminale").trim();
+  const R = semer(w*7919 + h*104729), e = MARQUEUR.epaisseur, m = e/2 + 1, D = MARQUEUR.depasse;
+  const j = ()=> (R()-.5)*2.4;
+  const C = [[m,m],[w-m,m],[w-m,h-m],[m,h-m]];
+  const types = COINS.slice();
+  for(let i=types.length-1;i>0;i--){ const k=Math.floor(R()*(i+1)); [types[i],types[k]]=[types[k],types[i]]; }
+  const coins = types.slice(0,4).map(t=>{
+    const a = D*(.6+.6*R()), b = D*(.6+.6*R()), court = 4+5*R();
+    if(t==="croise") return {arr:a, dep:b};
+    if(t==="touche") return {arr:e/2, dep:.5-e/2};
+    if(t==="ouvert") return R()<.5 ? {arr:-court, dep:.5-e/2} : {arr:e/2, dep:-court-e/2};
+    if(t==="te")     return R()<.5 ? {arr:a, dep:.5-e/2} : {arr:e/2, dep:b};
+    const r = 11+5*R(); return {arr:-r, dep:-r, rayon:r};
+  });
+  const trait = (sx,sy,ex,ey,cx,cy,sens)=>
+    `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" filter="url(#encre-${sens})"/>`;
+  let p = "";
+  for(let i=0;i<4;i++){
+    const A=C[i], B=C[(i+1)%4], horiz=(i%2===0);
+    const dx=Math.sign(B[0]-A[0]), dy=Math.sign(B[1]-A[1]);
+    const s=coins[i].dep, f=coins[(i+1)%4].arr;
+    const sx=A[0]-dx*s+(horiz?0:j()), sy=A[1]-dy*s+(horiz?j():0);
+    const ex=B[0]+dx*f+(horiz?0:j()), ey=B[1]+dy*f+(horiz?j():0);
+    p += trait(sx,sy,ex,ey,(sx+ex)/2+(horiz?0:j()*1.5),(sy+ey)/2+(horiz?j()*1.5:0),horiz?"h":"v");
+  }
+  for(let i=0;i<4;i++) if(coins[i].rayon){
+    const r=coins[i].rayon, K=C[i], P=C[(i+3)%4], N=C[(i+1)%4];
+    const ix=Math.sign(K[0]-P[0]), iy=Math.sign(K[1]-P[1]), ox=Math.sign(N[0]-K[0]), oy=Math.sign(N[1]-K[1]);
+    p += trait(K[0]-ix*r,K[1]-iy*r,K[0]+ox*r,K[1]+oy*r,K[0],K[1],"h");
+  }
+  const svg = `<svg class="marqueur" aria-hidden="true" data-taille="${w}x${h}" width="${w}" height="${h}">`
+    + `<g fill="none" stroke="${coul}" stroke-opacity="${MARQUEUR.encre}" stroke-width="${e}">${p}</g></svg>`;
+  if(ancien) ancien.remove();
+  el.insertAdjacentHTML("beforeend", svg);
+}
+const _surveilles = new WeakSet();
+const _taille = ("ResizeObserver" in window)
+  ? new ResizeObserver(entrees=>entrees.forEach(en=>tracerCadre(en.target))) : null;
+function tracerCadres(){
+  document.querySelectorAll(CADRES).forEach(el=>{
+    tracerCadre(el);
+    if(_taille && !_surveilles.has(el)){ _surveilles.add(el); _taille.observe(el); }
+  });
+}
+/* Le routeur, les devoirs et les fiches réécrivent #app : on retrace après
+   chaque écriture (un tracé déjà à la bonne taille ne se refait pas). */
+let _traceAttendu = false;
+new MutationObserver(()=>{
+  if(_traceAttendu) return;
+  _traceAttendu = true;
+  requestAnimationFrame(()=>{ _traceAttendu = false; tracerCadres(); });
+}).observe(document.getElementById("app"), { childList:true, subtree:true });
+window.addEventListener("resize", tracerCadres);
+document.fonts && document.fonts.ready.then(tracerCadres);
 
 /* ---------- Cours déposés depuis le tableau de bord ----------
    Deux sources alimentent la MÊME liste de fiches :
