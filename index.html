@@ -21,17 +21,21 @@
 <script id="supabase-js" defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3"></script>
 <style>
   :root{
-    /* Papier beige, écriture foncée : un seul thème, de jour comme de nuit
-       (octobre 2026 ; avant, une ardoise bleu nuit écrite en blanc, puis un
-       bleu ciel). Les couleurs des niveaux sont foncées pour se lire sur le
-       fond clair ; les cadres sont d'un beige plus soutenu que le fond. */
-    --papier:#f5f0e6; --papier-fonce:#e6dcc8; --carte:#f3e9d6;
+    /* Le papier des exercices interactifs, écriture foncée : un seul thème,
+       de jour comme de nuit (octobre 2026 ; avant, une ardoise bleu nuit
+       écrite en blanc, puis un bleu ciel, puis un beige). Le papier et les
+       carreaux sont ceux des exercices (--paper, --grid, 28 px) : passer du
+       portail aux exercices ne change pas de cahier. Les couleurs des niveaux
+       sont foncées pour se lire sur le clair ; les cadres sont d'un beige
+       légèrement transparent, les carreaux se devinent au travers. */
+    --papier:#f7f6f1; --papier-fonce:#e6dcc8; --carte:rgba(243,233,214,.72);
+    --carreau:#cbd8ec;
     --encre:#1e2a4a; --encre-douce:#4f5b78;
     --trait:rgba(30,42,74,.14); --trait-fort:#1e2a4a;
     --seconde:#1b7d62; --premiere:#a8680c; --terminale:#c0482c;
     --craie:'Kalam',cursive;
     --serif:'Fraunces',Georgia,serif; --sans:'Spline Sans',-apple-system,sans-serif;
-    --barre:rgba(245,240,230,.9);
+    --barre:rgba(247,246,241,.9);
     --ombre:rgba(30,42,74,.35); --sur-couleur:#ffffff;
     color-scheme:light;
   }
@@ -48,11 +52,9 @@
   html{scroll-behavior:smooth}
   body{font-family:var(--sans);color:var(--encre);background-color:var(--papier);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;
     background-image:
-      linear-gradient(rgba(120,95,60,.09) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(120,95,60,.09) 1px, transparent 1px),
-      radial-gradient(ellipse 60% 70% at 15% 20%, rgba(230,200,150,.25), transparent 70%),
-      radial-gradient(ellipse 55% 60% at 85% 85%, rgba(200,170,130,.15), transparent 70%);
-    background-size:36px 36px, 36px 36px, 100% 100%, 100% 100%;
+      linear-gradient(var(--carreau) 1px, transparent 1px),
+      linear-gradient(90deg, var(--carreau) 1px, transparent 1px);
+    background-size:28px 28px; background-position:-1px -1px;
     background-attachment:fixed;}
 
   /* Barre du haut */
