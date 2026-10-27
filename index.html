@@ -783,21 +783,22 @@ const CADRES = ".level-card,.door,.card,.dm-home-inner,.dm-banner";
 const MARQUEUR = { epaisseur:10, encre:.55, depasse:12 };
 function semer(g){ return ()=>{ g|=0; g=g+0x6D2B79F5|0; let t=Math.imul(g^g>>>15,1|g);
   t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
-/* Les quatre coins d'un cadre se croisent de quatre façons DIFFÉRENTES,
-   tirées parmi cinq : les deux traits se croisent, ils se touchent juste,
-   l'un s'arrête court, un seul dépasse (en T), ou le coin s'arrondit d'un
-   geste. Pour chaque coin : de combien le trait qui y ARRIVE et celui qui en
-   REPART le dépassent (négatif : il s'arrête avant).
-   Il y a 5 × 4 × 3 × 2 = 120 façons de ranger quatre coins différents :
-   le cadre de rang k prend la n° (49 k) mod 120 — 49 est premier avec 120,
-   si bien que les 120 premiers cadres d'une page ont chacun la leur. */
-const COINS = ["croise","touche","ouvert","te","arrondi"];
-function coinsDuRang(rang){
-  const reserve = COINS.slice(), choisis = [];
-  let n = (rang*49) % 120;
-  for(let i=0;i<4;i++){ const t = reserve.length; choisis.push(reserve.splice(n % t, 1)[0]); n = Math.floor(n / t); }
-  return choisis;
+/* Les coins d'un cadre se croisent de quatre façons : les deux traits se
+   croisent, ils se touchent juste, l'un s'arrête court, ou un seul dépasse
+   (en T). Jamais de coin arrondi (décision de Turquet, octobre 2026). Pour
+   chaque coin : de combien le trait qui y ARRIVE et celui qui en REPART le
+   dépassent (négatif : il s'arrête avant).
+   Un cadre mêle au moins trois de ces façons : ses quatre coins forment
+   l'un des 168 rangements où trois façons au moins sont présentes. Le cadre
+   de rang k prend le n° (125 k) mod 168 — 125 est premier avec 168, si bien
+   que les 168 premiers cadres d'une page ont chacun le leur. */
+const COINS = ["croise","touche","ouvert","te"];
+const RANGEMENTS = [];
+for(let n=0;n<256;n++){
+  const r = [0,1,2,3].map(i=>COINS[(n>>(2*i))&3]);
+  if(new Set(r).size >= 3) RANGEMENTS.push(r);
 }
+function coinsDuRang(rang){ return RANGEMENTS[(rang*125) % RANGEMENTS.length]; }
 function tracerCadre(el){
   const w=el.offsetWidth, h=el.offsetHeight;
   if(!w || !h) return;
@@ -814,8 +815,7 @@ function tracerCadre(el){
     if(t==="croise") return {arr:a, dep:b};
     if(t==="touche") return {arr:e/2, dep:.5-e/2};
     if(t==="ouvert") return R()<.5 ? {arr:-court, dep:.5-e/2} : {arr:e/2, dep:-court-e/2};
-    if(t==="te")     return R()<.5 ? {arr:a, dep:.5-e/2} : {arr:e/2, dep:b};
-    const r = 11+5*R(); return {arr:-r, dep:-r, rayon:r};
+    return R()<.5 ? {arr:a, dep:.5-e/2} : {arr:e/2, dep:b};          // en T
   });
   const trait = (sx,sy,ex,ey,cx,cy,sens)=>
     `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" filter="url(#encre-${sens})"/>`;
@@ -827,11 +827,6 @@ function tracerCadre(el){
     const sx=A[0]-dx*s+(horiz?0:j()), sy=A[1]-dy*s+(horiz?j():0);
     const ex=B[0]+dx*f+(horiz?0:j()), ey=B[1]+dy*f+(horiz?j():0);
     p += trait(sx,sy,ex,ey,(sx+ex)/2+(horiz?0:j()*1.5),(sy+ey)/2+(horiz?j()*1.5:0),horiz?"h":"v");
-  }
-  for(let i=0;i<4;i++) if(coins[i].rayon){
-    const r=coins[i].rayon, K=C[i], P=C[(i+3)%4], N=C[(i+1)%4];
-    const ix=Math.sign(K[0]-P[0]), iy=Math.sign(K[1]-P[1]), ox=Math.sign(N[0]-K[0]), oy=Math.sign(N[1]-K[1]);
-    p += trait(K[0]-ix*r,K[1]-iy*r,K[0]+ox*r,K[1]+oy*r,K[0],K[1],"h");
   }
   const svg = `<svg class="marqueur" aria-hidden="true" data-taille="${cle}" width="${w}" height="${h}">`
     + `<g fill="none" stroke="${coul}" stroke-opacity="${MARQUEUR.encre}" stroke-width="${e}">${p}</g></svg>`;
