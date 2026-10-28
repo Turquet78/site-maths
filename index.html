@@ -183,12 +183,6 @@
   <a class="brand" href="#/">M. Turquet <small>Mathématiques au lycée</small></a>
 </div>
 
-<!-- L'encre du marqueur : striée dans le sens du trait (horizontal, vertical). -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="encre-h" filterUnits="userSpaceOnUse" x="-60" y="-60" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.9" numOctaves="2" seed="5" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.15" result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/></filter>
-  <filter id="encre-v" filterUnits="userSpaceOnUse" x="-60" y="-60" width="4000" height="4000"><feTurbulence type="fractalNoise" baseFrequency="0.9 0.02" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.15" result="a"/><feComposite in="SourceGraphic" in2="a" operator="in"/></filter>
-</svg>
-
 <main id="app"></main>
 
 <footer>Ressources mises à disposition gratuitement pour les élèves</footer>
@@ -782,6 +776,22 @@ window.addEventListener("hashchange", router);
    que le routeur redessine. */
 const CADRES = ".level-card,.door,.card,.dm-home-inner,.dm-banner";
 const MARQUEUR = { epaisseur:10, encre:.55, depasse:12 };
+/* L'encre striée (feTurbulence) est un filtre propre à CHAQUE cadre, posé
+   dans son SVG et taillé à sa mesure (le cadre et une marge de 40 px). Un
+   filtre unique de 4000 × 4000 px, partagé par tous les cadres, dépassait
+   sur tablette (écran à 2 ou 3 pixels par point) la surface qu'un navigateur
+   accepte de filtrer : le filtre échouait, et un tracé dont le filtre échoue
+   ne s'affiche pas du tout — les cadres disparaissaient. */
+const ENCRE = { h:["0.02 0.9",5], v:["0.9 0.02",7] };
+let _nEncre = 0;
+function filtresEncre(w,h){
+  const n = ++_nEncre, M = 40;
+  const f = sens => `<filter id="encre-${sens}-${n}" filterUnits="userSpaceOnUse" x="${-M}" y="${-M}" width="${w+2*M}" height="${h+2*M}">`
+    + `<feTurbulence type="fractalNoise" baseFrequency="${ENCRE[sens][0]}" numOctaves="2" seed="${ENCRE[sens][1]}" result="n"/>`
+    + `<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.15" result="a"/>`
+    + `<feComposite in="SourceGraphic" in2="a" operator="in"/></filter>`;
+  return { n, defs:`<defs>${f("h")}${f("v")}</defs>` };
+}
 function semer(g){ return ()=>{ g|=0; g=g+0x6D2B79F5|0; let t=Math.imul(g^g>>>15,1|g);
   t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 /* Les coins d'un cadre se croisent de quatre façons : les deux traits se
@@ -818,8 +828,9 @@ function tracerCadre(el){
     if(t==="ouvert") return R()<.5 ? {arr:-court, dep:.5-e/2} : {arr:e/2, dep:-court-e/2};
     return R()<.5 ? {arr:a, dep:.5-e/2} : {arr:e/2, dep:b};          // en T
   });
+  const encre = filtresEncre(w,h);
   const trait = (sx,sy,ex,ey,cx,cy,sens)=>
-    `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" filter="url(#encre-${sens})"/>`;
+    `<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" filter="url(#encre-${sens}-${encre.n})"/>`;
   let p = "";
   for(let i=0;i<4;i++){
     const A=C[i], B=C[(i+1)%4], horiz=(i%2===0);
@@ -829,7 +840,7 @@ function tracerCadre(el){
     const ex=B[0]+dx*f+(horiz?0:j()), ey=B[1]+dy*f+(horiz?j():0);
     p += trait(sx,sy,ex,ey,(sx+ex)/2+(horiz?0:j()*1.5),(sy+ey)/2+(horiz?j()*1.5:0),horiz?"h":"v");
   }
-  const svg = `<svg class="marqueur" aria-hidden="true" data-taille="${cle}" width="${w}" height="${h}">`
+  const svg = `<svg class="marqueur" aria-hidden="true" data-taille="${cle}" width="${w}" height="${h}">${encre.defs}`
     + `<g fill="none" stroke="${coul}" stroke-opacity="${MARQUEUR.encre}" stroke-width="${e}">${p}</g></svg>`;
   if(ancien) ancien.remove();
   el.insertAdjacentHTML("beforeend", svg);
